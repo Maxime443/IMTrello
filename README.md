@@ -1,6 +1,6 @@
 # IMTrello
 
-# Hello Guys Hihi
+# Hello Guys Hi
 
 ## Getting started
 
