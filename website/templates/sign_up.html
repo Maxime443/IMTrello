@@ -35,6 +35,14 @@
                name="password2"
                placeholder="Confirm password "/>
     </div>
+    <div class="form-group">
+        <label for="user_type">What kind of user are you?</label>
+        <select id="user_type" name="user_type">
+          <option value="">Select current role</option>
+          <option value="1">Project Manager</option>
+          <option value="2">Developper</option>
+        </select>
+    </div>
 <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}

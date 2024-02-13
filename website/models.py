@@ -1,7 +1,12 @@
+import enum
+
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
+class User_type(enum.Enum):
+    project_manager = 0
+    developper = 1
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
