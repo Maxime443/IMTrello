@@ -1,4 +1,4 @@
-# Réflexion pour la database
+# DATABASE
 
 ## Task
 - [ ] task_id  <span style="color:cyan">**< primary key >**</span> 
@@ -9,7 +9,7 @@
 - [ ] start_date
 - [ ] end_date
 - [ ] state(“On Going” “Done” “Stop”)
-- [ ] developers
+- [ ] users
 - [ ] comments
 
 ## Section
@@ -34,12 +34,12 @@
 - [ ] name
 - [ ] user_type
 
-## Project Manager 
-- [ ] <span style="color:green">**extends User**</span> 
+
+- IF <span style="color:green">**Project Manager**</span> 
 - [ ] my_projects 
 
-## Developer
-- [ ] <span style="color:green">**extends User**</span>
+
+- IF <span style="color:green">**Developer**</span>
 - [ ] tasks
 - [ ] skills
 
