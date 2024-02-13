@@ -3,21 +3,30 @@
 ## Task
 - [ ] task_id  <span style="color:cyan">**< primary key >**</span> 
 - [ ] name
-- [ ] project
+- [ ] section
 - [ ] description
 - [ ] priority(1 to 5)
-- [ ] delay
+- [ ] start_date
+- [ ] end_date
 - [ ] state(“On Going” “Done” “Stop”)
-- [ ] users
+- [ ] developers
 - [ ] comments
+
+## Section
+- [ ] section_id  <span style="color:cyan">**< primary key >**</span> 
+- [ ] name
+- [ ] project
+- [ ] tasks
 
 ## Project
 - [ ] project_id  <span style="color:cyan">**< primary key >**</span> 
 - [ ] nom
 - [ ] description
-- [ ] delay
+- [ ] start_date
+- [ ] end_date
+- [ ] sections
 - [ ] completion
-- [ ] admin_user
+- [ ] admin
 
 ## User
 - [ ] user_id  <span style="color:cyan">**< primary key >**</span> 
@@ -29,7 +38,7 @@
 - [ ] <span style="color:green">**extends User**</span> 
 - [ ] my_projects 
 
-## Developper
+## Developer
 - [ ] <span style="color:green">**extends User**</span>
 - [ ] tasks
 - [ ] skills
