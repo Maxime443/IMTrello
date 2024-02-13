@@ -1,0 +1,5 @@
+flask-sqlalchemy
+flask~=2.2.5
+werkzeug~=2.3.8
+sqlalchemy~=2.0.25
+flask-login~=0.6.3
