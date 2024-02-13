@@ -25,12 +25,12 @@
 - [ ] name
 - [ ] user_type
 
-
-- FOR <span style="color:green">**Project Manager**</span> 
+## Project Manager 
+- [ ] <span style="color:green">**extends User**</span> 
 - [ ] my_projects 
 
-
-- FOR <span style="color:green">**Developper**</span> 
+## Developper
+- [ ] <span style="color:green">**extends User**</span>
 - [ ] tasks
 - [ ] skills
 
