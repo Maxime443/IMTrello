@@ -6,7 +6,6 @@ from .models import Note
 from . import db
 import json
 
-
 views = Blueprint('views', __name__)
 
 @views.route('/', methods=['GET', 'POST'])
@@ -33,5 +32,4 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
-
     return jsonify({})
