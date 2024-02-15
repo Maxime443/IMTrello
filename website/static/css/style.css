@@ -1,0 +1,26 @@
+
+.clicked {
+  background-color: green !important; /* Change this to the desired color */
+  color: white !important; /* Change this to the desired color */
+}
+
+.btn.btn-danger {
+
+}
+
+.btn.btn-dark {
+
+}
+
+.btn.btn-primary {
+
+}
+
+.btn.btn-success {
+
+}
+
+.bleu {
+  background-color: dodgerblue;
+  color: black;
+}

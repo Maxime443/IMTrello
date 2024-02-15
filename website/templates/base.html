@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css") }}"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -76,15 +77,26 @@
     ></script>
 
     {% block javascript %}
+
+
+
+
     <script type="text/javascript">
-      function deleteNote(noteId) {
+
+/* function deleteNote(noteId) {
   fetch("/delete-note", {
     method: "POST",
     body: JSON.stringify({ noteId: noteId }),
   }).then((_res) => {
     window.location.href = "/";
   });
-  }
+
+*/
+
+
+
+
+
     </script>
     {% endblock %}
   </body>

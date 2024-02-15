@@ -1,0 +1,92 @@
+{% extends "base.html" %} {% block title %}Home2{% endblock %}
+
+{% block content
+%}
+<h1 align="center">Notes</h1>
+<ul class="list-group list-group-flush" id="notes">
+
+  {% for note in user.note %}
+  <li class="list-group-item">
+
+    <div id="note{{ note.id }}" class="note-text">{{ note.data }}</div>
+
+    <button type="button" class="btn btn-dark" onClick="changeNoteStyle(this, {{ note.id }})">
+        Change Style
+    </button>
+    <button type="button" class="bleu" onClick="editNote({{ note.id }})">
+        Edit
+    </button>
+    <button type="button" class="btn btn-danger" onClick="deleteNote({{ note.id }})">
+        Delete
+    </button>
+    <button type="button" class="btn" onClick="saveNote({{ note.id }})" style="display: none;">
+        Save
+    </button>
+
+  </li>
+  {% endfor %}
+
+</ul>
+
+<div id="newButtonContainer"></div>
+
+<form method="POST">
+  <textarea name="note" id="note" class="form-control"></textarea>
+  <br />
+  <div align="center">
+    <button type="submit" class="btn btn-primary" id="submitButton">Add Note</button>
+  </div>
+</form>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('note').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('submitButton').click();
+    }
+  });
+});
+function changeNoteStyle(button, noteId) {
+  button.classList.add("clicked");
+}
+
+function editNote(noteId) {
+  var noteTextElement = document.getElementById("note" + noteId);
+  var noteData = noteTextElement.innerText;
+  noteTextElement.innerHTML = '<input type="text" id="noteInput' + noteId + '" class="form-control" value="' + noteData + '">';
+  console.log(document.querySelectorAll("#note" + noteId));
+  document.querySelector("#note" + noteId + " input").focus();
+  document.querySelector("#note" + noteId + " .btn").style.display = "inline-block";
+  document.querySelector("#note" + noteId + " .btn.btn-primary").style.display = "none";
+  document.querySelector("#note" + noteId + " .btn.btn-danger").style.display = "none";
+
+
+}
+
+function saveNote(noteId) {
+  var noteInputElement = document.getElementById("noteInput" + noteId);
+  var updatedNoteData = noteInputElement.value;
+  // Update the note data in the DOM
+  document.getElementById("note" + noteId).innerHTML = updatedNoteData;
+  // Toggle visibility of buttons
+
+  let editButton = document.querySelector("#note" + noteId + " .bleu");
+  console.log(editButton);
+  document.querySelector("#note" + noteId + " .btn.btn-primary").style.display = "inline-block";
+  document.querySelector("#note" + noteId + " .btn.btn-danger").style.display = "inline-block";
+  document.querySelector("#note" + noteId + " .btn.btn-success").style.display = "none";
+  // Perform any other actions, such as sending the updated note data to the server
+}
+
+function deleteNote(noteId) {
+  console.log("Delete button is clicked for note ID: " + noteId);
+  fetch("/delete-note", {
+    method: "POST",
+    body: JSON.stringify({ noteId: noteId }),
+  }).then((_res) => {
+    window.location.href = "/home2";
+  });
+}
+</script>
+{% endblock %}
