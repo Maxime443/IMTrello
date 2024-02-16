@@ -12,12 +12,15 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     if request.method == 'POST':
-        text = request.form.get('project')
-        if len(text) < 1:
+        name = request.form.get('name')
+        description = request.form.get('description')
+        date = request.form.get('end_date')
+        end_date=datetime.strptime(date, '%Y-%m-%d').date()
+        if len(name) < 1:
             flash('Project is too short.', category='error')
         else:
             flash('Project added', category='success')
-            new_project = Project(name=text, admin_id=current_user.id)
+            new_project = Project(name=name, admin_id=current_user.id, description=description, end_date=end_date)
             db.session.add(new_project)
             current_user.projects.append(new_project)
             db.session.commit()

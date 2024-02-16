@@ -25,8 +25,8 @@ class User(UserMixin, db.Model):
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10000))
-    #start_date=db.Column(db.DateTime(timezone=True), default=func.now())
-    #end_date = db.Column(db.DateTime(timezone=True))
+    description = db.Column(db.String(10000))
+    end_date = db.Column(db.DateTime(timezone=True))
     admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sections=db.relationship('Section',backref='project')
 
