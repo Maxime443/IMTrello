@@ -51,7 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 function changeNoteStyle(button, noteId) {
-  button.classList.add("clicked");
+  // Generate a random color code
+  var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+  var noteTextElement = document.getElementById("text" + noteId);
+  // Apply the random color to the element's background color
+  noteTextElement.style.color = randomColor;
 }
 
 function editNote(noteId) {
