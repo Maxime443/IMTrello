@@ -14,10 +14,10 @@ def home():
     if request.method == 'POST':
         text = request.form.get('project')
         if len(text) < 1:
-            flash('Note is too short.', category='error')
+            flash('Project is too short.', category='error')
         else:
-            flash('Note added', category='success')
-            new_project = Project(name=text, user_id=current_user.id)
+            flash('Project added', category='success')
+            new_project = Project(name=text, admin_id=current_user.id)
             db.session.add(new_project)
             current_user.projects.append(new_project)
             db.session.commit()

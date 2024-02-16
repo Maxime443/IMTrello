@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
 <h1 align="center">
-    {% if user.type==PROJECT_MANAGER %}
+    {% if user.type=='PROJECT_MANAGER' %}
     You are a project manager
     {% else %}
     You are a developer
@@ -17,13 +17,49 @@
   </li>
   {% endfor %}
 </ul>
-<form method="POST">
-  <textarea name="project" id="project" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary" id="submitButton">Add Project</button>
-  </div>
-</form>
+<div class="modal fade" id="modal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Nouveau Projet
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+            <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Project name</label>
+                            <input type="name"
+                                   class="form-control"
+                                   id="name"
+                                   name="name"
+                                   placeholder="Your project name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="Description">Description</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="Description"
+                                   name="Description"
+                                   placeholder="Describe your project"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="End_date">End of your project</label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="End_date"
+                                   name="End_date"
+                                   placeholder=""/>
+                        </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" >Créer Projet</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('project').addEventListener('keypress', function(e) {
