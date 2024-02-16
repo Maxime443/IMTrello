@@ -9,15 +9,16 @@
   <li class="list-group-item">
     {{ section.name }}
 
-    <button type="button" class="close" onClick="">
+    <button type="button" class="close" onClick="deleteSection({{ section.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
   </li>
   {% endfor %}
-</ul>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal1">
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
         New Section
     </button>
+</ul>
 
 <div class="modal fade" id="modal_new_section">
     <div class="modal-dialog">
@@ -94,6 +95,13 @@
 
 -->
 <script>
-
+ function deleteSection(sectionId) {
+  fetch("/delete-section", {
+    method: "POST",
+    body: JSON.stringify({ sectionId: sectionId }),
+  }).then((_res) => {
+    window.location.href = "/project/" + {{ project.id }};
+  });
+  }
 </script>
 {% endblock %}
