@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Project, User
 from . import db
 import json
 
@@ -12,13 +12,14 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     if request.method == 'POST':
-        text = request.form.get('note')
+        text = request.form.get('project')
         if len(text) < 1:
             flash('Note is too short.', category='error')
         else:
             flash('Note added', category='success')
-            new_note = Note(data=text, user_id=current_user.id,date=datetime.now())
-            db.session.add(new_note)
+            new_project = Project(name=text, user_id=current_user.id)
+            db.session.add(new_project)
+            current_user.projects.append(new_project)
             db.session.commit()
             return redirect(url_for('views.home'))
     return render_template("home.html",user=current_user)
@@ -27,7 +28,7 @@ def home():
 def delete_note():
     note = json.loads(request.data) # this function expects a JSON from the INDEX.js file
     noteId = note['noteId']
-    note = Note.query.get(noteId)
+    note = Project.query.get(noteId)
     if note:
         if note.user_id == current_user.id:
             db.session.delete(note)
