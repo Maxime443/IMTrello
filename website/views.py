@@ -37,3 +37,14 @@ def delete_note():
             db.session.delete(note)
             db.session.commit()
     return jsonify({})
+
+
+@views.route('/project/<project_id>')
+def project(project_id):
+    # Here you would fetch the project data corresponding to project_id
+    # For example, if you have a database, you would query the database for the project details
+
+    # Assuming you have the project data available, you would pass it to the template
+    project = Project.query.get(project_id)
+
+    return render_template('project.html', user=current_user, project=project)

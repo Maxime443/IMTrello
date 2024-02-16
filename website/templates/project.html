@@ -1,22 +1,15 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Project{% endblock %} {% block content
+%}
 <h1 align="center">
-    {% if user.type=='PROJECT_MANAGER' %}
-    You are a project manager
-    {% else %}
-    You are a developer
-    {% endif %}
+    {{ project.name }}
 </h1>
+    <!--
 <ul class="list-group list-group-flush" id="notes">
   {% for project in user.projects %}
   <li class="list-group-item">
     {{ project.name }}
-    <button type="button" class="btn btn-primary" onClick="openProject({{ project.id }})">
+    <button type="button" class="btn btn-primary" onClick="openProject({{ project }})">
         Open
-    </button>
-    <button type="button" class="close" onClick="">
-      <span aria-hidden="true">&times;</span>
     </button>
     <button type="button" class="close" onClick="">
       <span aria-hidden="true">&times;</span>
@@ -24,6 +17,8 @@
   </li>
   {% endfor %}
 </ul>
+
+
 <div class="modal fade" id="modal1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -67,12 +62,9 @@
         </div>
     </div>
 </div>
+
+-->
 <script>
-function openProject(projectId) {
 
-
-    // Redirect the user to the project page with the project ID as part of the URL
-    window.location.href = "/project/" + projectId;
-}
 </script>
 {% endblock %}
