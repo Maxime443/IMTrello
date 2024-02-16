@@ -8,20 +8,23 @@
   {% for note in user.note %}
   <li class="list-group-item">
 
-    <div id="note{{ note.id }}" class="note-text">{{ note.data }}</div>
-
+    <div id="note{{ note.id }}" class="note-text">
+        <div id="text{{ note.id }}" class="note-text">{{ note.data }}</div>
     <button type="button" class="btn btn-dark" onClick="changeNoteStyle(this, {{ note.id }})">
         Change Style
     </button>
-    <button type="button" class="bleu" onClick="editNote({{ note.id }})">
+    <button type="button" class="btn btn-primary" onClick="editNote({{ note.id }})">
         Edit
     </button>
     <button type="button" class="btn btn-danger" onClick="deleteNote({{ note.id }})">
         Delete
     </button>
-    <button type="button" class="btn" onClick="saveNote({{ note.id }})" style="display: none;">
+    <button type="button" class="btn btn-success" onClick="saveNote({{ note.id }})" style="display: none;">
         Save
     </button>
+        </div>
+
+
 
   </li>
   {% endfor %}
@@ -52,14 +55,20 @@ function changeNoteStyle(button, noteId) {
 }
 
 function editNote(noteId) {
-  var noteTextElement = document.getElementById("note" + noteId);
+  var noteTextElement = document.getElementById("text" + noteId);
   var noteData = noteTextElement.innerText;
   noteTextElement.innerHTML = '<input type="text" id="noteInput' + noteId + '" class="form-control" value="' + noteData + '">';
-  console.log(document.querySelectorAll("#note" + noteId));
-  document.querySelector("#note" + noteId + " input").focus();
-  document.querySelector("#note" + noteId + " .btn").style.display = "inline-block";
+  console.log(document.querySelectorAll(" .btn-primary"));
+  console.log(document.querySelectorAll(" .btn-primary").item(0).parentElement);
+
   document.querySelector("#note" + noteId + " .btn.btn-primary").style.display = "none";
   document.querySelector("#note" + noteId + " .btn.btn-danger").style.display = "none";
+  document.querySelector("#note" + noteId + " .btn.btn-success").style.display = "inline-block";
+
+
+  document.querySelector("#text" + noteId + " input").focus();
+
+
 
 
 }
@@ -68,11 +77,10 @@ function saveNote(noteId) {
   var noteInputElement = document.getElementById("noteInput" + noteId);
   var updatedNoteData = noteInputElement.value;
   // Update the note data in the DOM
-  document.getElementById("note" + noteId).innerHTML = updatedNoteData;
+  document.getElementById("text" + noteId).innerHTML = updatedNoteData;
   // Toggle visibility of buttons
 
-  let editButton = document.querySelector("#note" + noteId + " .bleu");
-  console.log(editButton);
+
   document.querySelector("#note" + noteId + " .btn.btn-primary").style.display = "inline-block";
   document.querySelector("#note" + noteId + " .btn.btn-danger").style.display = "inline-block";
   document.querySelector("#note" + noteId + " .btn.btn-success").style.display = "none";
