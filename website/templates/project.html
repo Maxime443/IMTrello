@@ -1,27 +1,54 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Project{% endblock %} {% block content
+%}
 <h1 align="center">
-    {% if user.type=='PROJECT_MANAGER' %}
-    You are a project manager
-    {% else %}
-    You are a developer
-    {% endif %}
-</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for project in user.projects %}
-  <li class="list-group-item">
     {{ project.name }}
-    <button type="button" class="btn btn-primary" onClick="open_Project({{ project.id }})">
-        Open
-    </button>
-    <button type="button" class="close" onClick="delete_Project({{ project.id }})">
+</h1>
+
+<ul class="list-group list-group-flush" id="sections">
+  {% for section in project.sections %}
+  <li class="list-group-item">
+    {{ section.name }}
+
+    <button type="button" class="close" onClick="deleteSection({{ section.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
-
   </li>
   {% endfor %}
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
+        New Section
+    </button>
 </ul>
+
+<div class="modal fade" id="modal_new_section">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    New Section
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+            <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Section Name</label>
+                            <input type="name"
+                                   class="form-control"
+                                   id="name"
+                                   name="name"
+                                   placeholder="This section's name"/>
+                        </div>
+
+            </div>
+            <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" >Create Section</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--
 <div class="modal fade" id="modal1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -65,19 +92,16 @@
         </div>
     </div>
 </div>
+
+-->
 <script>
-function open_Project(projectId) {
-    // Redirect the user to the project page with the project ID as part of the URL
-    window.location.href = "/project/" + projectId;
-}
- function delete_Project(projectId) {
-  fetch("/delete-project", {
+ function deleteSection(sectionId) {
+  fetch("/delete-section", {
     method: "POST",
-    body: JSON.stringify({ projectId: projectId }),
+    body: JSON.stringify({ sectionId: sectionId }),
   }).then((_res) => {
-    window.location.href = "/";
+    window.location.href = "/project/" + {{ project.id }};
   });
   }
-
 </script>
 {% endblock %}
