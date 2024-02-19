@@ -92,7 +92,8 @@
             </div>
             <input type="hidden" name="action" value="add_developer">
              <form method="POST" action="/project/{{ project.id }}">
-	            <div class="modal-body">
+             <input type="hidden" name="action" value= "add_developer">
+	         <div class="modal-body">
              <label for="name">Share to</label>
 	         <div class="form-group">
                  <select id="developer_emails"
@@ -106,7 +107,7 @@
 	         </div>
             </div>
             <div class="modal-footer">
-                    <button action="add_developer" type="submit" class="btn btn-primary" >Add</button>
+	            <button type="submit" class="btn btn-primary" >Add</button>
             </div>
             </form>
         </div>
