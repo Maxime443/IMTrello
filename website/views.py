@@ -87,6 +87,7 @@ def project(project_id):
 
         elif action == "add_developer":
             selected_emails = request.form.getlist('developer_emails')  # Récupérer les adresses e-mail sélectionnées
+            print(selected_emails)
             devs = User.query.filter(User.email.in_(selected_emails)).all()  # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
             for developer in devs:
                 developer.projects.append(Project.query.get(project_id))
