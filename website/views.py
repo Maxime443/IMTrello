@@ -29,7 +29,7 @@ def home():
                 return redirect(url_for('views.home'))
                 # otherwise it's the project renaming form
         else:
-            name = request.form.get('name1')
+            name = request.form.get('name4')
             project_id = request.form.get('project_id')
             if len(name) < 1:
                 flash('Project is too short.', category='error')

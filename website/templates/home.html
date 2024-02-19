@@ -16,6 +16,9 @@
     <button type="button" class="btn btn-primary" onClick="open_Project({{ project.id }})">
         Open
     </button>
+    <button type="button" class="btn btn-primary" onclick="showModal({{ project.id }})">
+        Rename
+    </button>
     <button type="button" class="close" onClick="delete_Project({{ project.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -23,4 +26,40 @@
   </li>
   {% endfor %}
 </ul>
+<div class="modal fade" id="modal_rename_project">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Rename
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Add an ID to the form -->
+            <form method="POST" id="renameForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nam21">Project name</label>
+                        <input type="text" class="form-control" id="name4" name="name4" placeholder="Your project name"/>
+                    </div>
+                    <!-- Add an ID to the hidden input field -->
+                    <input type="hidden" id="project_id" name="project_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Rename Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+    <script>
+        function showModal(projectId) {
+            // Set the value of the hidden input field with the project ID
+            document.getElementById('project_id').value = projectId;
+            // Show the modal
+            $('#modal_rename_project').modal('show');
+        }
+    </script>
+
 {% endblock %}
