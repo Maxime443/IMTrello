@@ -59,17 +59,6 @@ def home():
 
     return render_template("home.html",user=current_user)
 
-@views.route('/delete-note', methods=['POST'])
-def delete_note():
-    note = json.loads(request.data) # this function expects a JSON from the INDEX.js file
-    noteId = note['noteId']
-    note = Project.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-    return jsonify({})
-
 @views.route('/delete-project', methods=['POST'])
 def delete_project():
     project = json.loads(request.data) # this function expects a JSON from the INDEX.js file
@@ -84,24 +73,29 @@ def delete_project():
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
     project = Project.query.get(project_id)
+    developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
+    user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     if request.method == 'POST':
-        name = request.form.get('name')
-        if len(name) < 1:
-            flash('Section name is too short.', category='error')
-        else:
+        action = request.form.get('action')
+        if action == 'add_section':
+            name = request.form.get('name')
             flash('Section added', category='success')
             new_section = Section(name=name, project_id=project_id)
             db.session.add(new_section)
             project.sections.append(new_section)
             db.session.commit()
-           # return redirect(url_for('project/' + project_id))
-    # Here you would fetch the project data corresponding to project_id
-    # For example, if you have a database, you would query the database for the project details
 
-    # Assuming you have the project data available, you would pass it to the template
+        elif action == "add_developer":
+            selected_emails = request.form.getlist('developer_emails')  # Récupérer les adresses e-mail sélectionnées
+            devs = User.query.filter(User.email.in_(selected_emails)).all()  # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
+            for developer in devs:
+                developer.projects.append(Project.query.get(project_id))
+            db.session.commit()
+            return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
 
-
-    return render_template('project.html', user=current_user, project=project)
+        else:
+            return home()
+    return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
 
 @views.route('/delete-section', methods=['POST'])
 def delete_section():
@@ -112,3 +106,4 @@ def delete_section():
         db.session.delete(section)
         db.session.commit()
     return jsonify({})
+
