@@ -36,6 +36,8 @@ class Section(db.Model):
     name = db.Column(db.String(1000))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     tasks = db.relationship('Task',backref='section')
+
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10000))

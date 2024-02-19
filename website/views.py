@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint, jsonify
 from flask_login import login_required, current_user
-from .models import Project, User, Section
+from .models import Project, User, Section, Task
 from . import db
 import json
 
@@ -22,7 +22,7 @@ def home():
                 flash('Project name is too short.', category='error')
             else:
                 flash('Project added', category='success')
-                new_project = Project(name=name, admin_id=current_user.id, description=description, end_date=end_date, sections=[])
+                new_project = Project(name="Project " + name, admin_id=current_user.id, description=description, end_date=end_date, sections=[])
                 db.session.add(new_project)
                 current_user.projects.append(new_project)
                 db.session.commit()
@@ -36,24 +36,7 @@ def home():
             else:
                 flash('Project renamed', category='success')
                 old_project = Project.query.get(project_id)
-                new_project = Project()  # Create a new instance of the Project model
-                new_project.name = name  # Assign the new name to the new project
-                # Copy other attributes as needed
-                new_project.id = old_project.id
-                new_project.admin_id = old_project.admin_id
-                new_project.end_date = old_project.end_date
-                new_project.description = old_project.description
-                new_project.sections = []
-                for section in old_project.sections:
-                    new_project.sections.append(section)
-                if old_project in current_user.projects:
-                    current_user.projects.remove(old_project)
-                # Remove the old project from the session and delete it from the database
-                db.session.delete(old_project)
-                # Update the relationships with the new project
-                current_user.projects.append(new_project)
-                # Add the new project to the session and commit the changes
-                db.session.add(new_project)
+                old_project.name = name
                 db.session.commit()
                 return redirect(url_for('views.home'))
 
@@ -72,15 +55,16 @@ def delete_project():
 
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
+    flash('POST received', category='success')
     project = Project.query.get(project_id)
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'add_section':
-            name = request.form.get('name')
+            name = request.form.get('section_name')
             flash('Section added', category='success')
-            new_section = Section(name=name, project_id=project_id)
+            new_section = Section(name="Section " + name, project_id=project_id, tasks=[])
             db.session.add(new_section)
             project.sections.append(new_section)
             db.session.commit()
@@ -92,6 +76,18 @@ def project(project_id):
                 developer.projects.append(Project.query.get(project_id))
             db.session.commit()
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
+
+        elif action == 'add_task':
+            name = request.form.get('task_name')
+            section_id = request.form.get('task_section_id')
+            print(section_id)
+            description = request.form.get('task_description')
+            flash('Task added', category='success')
+            new_task = Task(name="Task " + name, section_id=section_id, description=description)
+            db.session.add(new_task)
+            section = Section.query.get(section_id)
+            section.tasks.append(new_task)
+            db.session.commit()
 
         else:
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
