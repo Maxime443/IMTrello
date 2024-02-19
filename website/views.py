@@ -94,7 +94,7 @@ def project(project_id):
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
 
         else:
-            return home()
+            return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
     return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
 
 @views.route('/delete-section', methods=['POST'])
