@@ -53,22 +53,25 @@ def delete_project():
 def project(project_id):
     project = Project.query.get(project_id)
     if request.method == 'POST':
+        action = request.form.get('action')
         name = request.form.get('name')
-        if len(name) < 1:
-            flash('Section name is too short.', category='error')
+        if action == 'add_section':
+            if len(name) < 1:
+                flash('Section name is too short.', category='error')
+            else:
+                flash('Section added', category='success')
+                new_section = Section(name=name, project_id=project_id)
+                db.session.add(new_section)
+                project.sections.append(new_section)
+                db.session.commit()
+               # return redirect(url_for('project/' + project_id))
+        # Here you would fetch the project data corresponding to project_id
+        # For example, if you have a database, you would query the database for the project details
+
+        # Assuming you have the project data available, you would pass it to the template
+
         else:
-            flash('Section added', category='success')
-            new_section = Section(name=name, project_id=project_id)
-            db.session.add(new_section)
-            project.sections.append(new_section)
-            db.session.commit()
-           # return redirect(url_for('project/' + project_id))
-    # Here you would fetch the project data corresponding to project_id
-    # For example, if you have a database, you would query the database for the project details
-
-    # Assuming you have the project data available, you would pass it to the template
-
-
+            return home()
     return render_template('project.html', user=current_user, project=project)
 
 @views.route('/delete-section', methods=['POST'])
@@ -80,3 +83,4 @@ def delete_section():
         db.session.delete(section)
         db.session.commit()
     return jsonify({})
+

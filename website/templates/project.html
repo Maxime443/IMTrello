@@ -1,8 +1,15 @@
-{% extends "base.html" %} {% block title %}Project{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Project{% endblock %}
+{% block share %}<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_share">Share
+</button>
+{% endblock %}
+{% block content
 %}
+<div display="flex">
 <h1 align="center">
     {{ project.name }}
 </h1>
+</div>
+
 
 <ul class="list-group list-group-flush" id="sections">
   {% for section in project.sections %}
@@ -30,6 +37,7 @@
                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST">
+            <input type="hidden" name="action" value="add_section">
             <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Section Name</label>
@@ -38,6 +46,46 @@
                                    id="name"
                                    name="name"
                                    placeholder="This section's name"/>
+                        </div>
+
+            </div>
+            <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" >Create Section</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_share">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Add developers
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+            <input type="hidden" name="action" value="add_developer">
+            <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Share to</label>
+                            <select id="emailInput" class="js-example-basic-multiple form-control" multiple="multiple">
+        <!-- Options ici -->
+    </select>
+    <!-- Inclure les fichiers JavaScript de Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#emailInput').select2({
+                tags: true,
+                tokenSeparators: [',', ' '],
+                placeholder: "Entrez les adresses e-mail"
+            });
+        });
+    </script>
                         </div>
 
             </div>
