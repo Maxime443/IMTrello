@@ -55,7 +55,6 @@ def delete_project():
 
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
-    flash('POST received', category='success')
     project = Project.query.get(project_id)
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs

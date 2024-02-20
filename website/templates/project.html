@@ -32,17 +32,21 @@
 					{% endfor %}
 				</ol>
 			</div>
-			<div class="card_footer">
-				<button type="button" class="add-card-btn btn-dark btn" onclick="showModalforNewTask({{ section.id }})"><i class="fas fa-plus"></i>Add task</button>
-			</div>
+			{% if user.type=='PROJECT_MANAGER' %}
+				<div class="card_footer">
+					<button type="button" class="add-card-btn btn-dark btn" onclick="showModalforNewTask({{ section.id }})"><i class="fas fa-plus"></i>Add task</button>
+				</div>
+			{% endif %}
 		</div>
 	</li>
 	{% endfor %}
-	<div class="add_section">
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
-			New Section
-	    </button>
-	</div>
+	{% if user.type=='PROJECT_MANAGER' %}
+		<div class="add_section">
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
+				New Section
+		    </button>
+		</div>
+	{% endif %}
 </ol>
 
 <div class="modal fade" id="modal_new_section">
@@ -178,6 +182,8 @@
             });
         });
 */
+
     </script>
+
 
 {% endblock %}
