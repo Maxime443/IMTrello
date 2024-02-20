@@ -13,43 +13,35 @@
 </div>
 
 
-<ul class="list-group list-group-flush" id="sections">
-  {% for section in project.sections %}
-  <li class="list-group-item">
-    {{ section.name }}
+<ol class="list-group list-group-flush" id="sections">
+	{% for section in project.sections %}
+	<li class="list-group-item section">
+		<div class="card">
+			<div class="header">
+				{{ section.name }}
+				<button type="button" class="close" onClick="deleteSection({{ section.id }})">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="content">
+				<ol class="list-group list-group-flush" id="task">
+					{% for task in section.tasks %}
+						<div class="task">
+							<li class="list-group-item">{{ task.name }}</li>
+						</div>
+					{% endfor %}
+				</ol>
+			</div>
+			<div class="footer">
+				<button type="button" class="btn btn-primary" onclick="showModalforNewTask({{ section.id }})">New Task</button>
+			</div>
+		</div>
+	</li>
+	{% endfor %}
+	<div class="add_section">
 
-    <button type="button" class="close" onClick="deleteSection({{ section.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-        <div >
-            <button type="button" class="btn btn-primary" onclick="showModalforNewTask({{ section.id }})">
-        New Task
-            </button>
-
-        </div>
-        <ul class="list-group list-group-flush" id="task">
-          {% for task in section.tasks %}
-              <li class="list-group-item">
-                {{ task.name }}
-
-
-              </li>
-          {% endfor %}
-
-
-</ul>
-
-
-
-
-  </li>
-  {% endfor %}
-
-
-</ul>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
-        New Section
-    </button>
+	</div>
+</ol>
 
 <div class="modal fade" id="modal_new_section">
     <div class="modal-dialog">
