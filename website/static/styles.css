@@ -20,15 +20,15 @@ body{
     width: 100%;
 }
 
-#sections{
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    padding: 0 6px;
-    bottom: 0;
-    left: 0;
-    top: 0;
-}
+/*#sections{*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    list-style: none;*/
+/*    padding: 0 6px;*/
+/*    bottom: 0;*/
+/*    left: 0;*/
+/*    top: 0;*/
+/*}*/
 
 .card{
     display: flex;
@@ -80,7 +80,8 @@ li{
 }
 
 .section{
-    padding: 0 6px;
+    padding: 6px 6px;
+    margin: 6px 6px;
     height: 100%;
 }
 
