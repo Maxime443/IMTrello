@@ -15,31 +15,33 @@
 
 <ol class="list-group list-group-flush" id="sections">
 	{% for section in project.sections %}
-	<li class="list-group-item section">
+	<li class="section">
 		<div class="card">
-			<div class="header">
+			<div class="card_header">
 				{{ section.name }}
-				<button type="button" class="close" onClick="deleteSection({{ section.id }})">
-					<span aria-hidden="true">&times;</span>
-				</button>
+				<button type="button" class="btn-close btn-close-white" onClick="deleteSection({{ section.id }})"></button>
 			</div>
-			<div class="content">
-				<ol class="list-group list-group-flush" id="task">
+			<div class="card_content">
+				<ol class="list-group list-group-flush" id="list_task">
 					{% for task in section.tasks %}
-						<div class="task">
-							<li class="list-group-item">{{ task.name }}</li>
-						</div>
+						<li >
+							<div class="task">
+								{{ task.name }}
+							</div>
+						</li>
 					{% endfor %}
 				</ol>
 			</div>
-			<div class="footer">
-				<button type="button" class="btn btn-primary" onclick="showModalforNewTask({{ section.id }})">New Task</button>
+			<div class="card_footer">
+				<button type="button" class="add-card-btn btn-dark btn" onclick="showModalforNewTask({{ section.id }})"><i class="fas fa-plus"></i>Add task</button>
 			</div>
 		</div>
 	</li>
 	{% endfor %}
 	<div class="add_section">
-
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
+			New Section
+	    </button>
 	</div>
 </ol>
 
