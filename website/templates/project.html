@@ -41,6 +41,35 @@
                   </div>
 
 
+                  <div class="modal fade" id="modal_open_task_{{ task.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 id="open_task_title">
+
+                                    </h5>
+                                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                               <div class="modal-body">
+                                    <div class="content" id="open_task_description">
+
+                                    </div>
+                                    <div class="open_task_status">
+                                        <label for="task_status_select">Status</label>
+                                        <select id="task_status_select" onchange="updateTaskStatus({{ task.id }})">
+                                          <option value="todo">To Do</option>
+                                          <option value="in_progress">In Progress</option>
+                                          <option value="completed">Completed</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
               </li>
           {% endfor %}
 
@@ -161,33 +190,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal_open_task">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="open_task_title">
 
-                </h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-           <div class="modal-body">
-                <div class="content" id="open_task_description">
-
-                </div>
-                <div class="open_task_status">
-                    <label for="task_status_select">Status</label>
-                    <select id="task_status_select" onchange="">
-                      <option value="todo">To Do</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="completed">Completed</option>
-                    </select>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -209,7 +212,9 @@
             $('#modal_new_task').modal('show');
   }
 function updateTaskStatus(task_id) {
-    const new_status = document.getElementById("task_status_select").value;
+      var selectElement = document.getElementById("task_status_select")
+      console.log("updating task " + task_id + " to " + selectElement.options[selectElement.selectedIndex].value)
+    const new_status = selectElement.options[selectElement.selectedIndex].value;
 
     fetch('/update_task_status/' + task_id, {
     method: "POST",
@@ -232,31 +237,28 @@ function updateTaskStatus(task_id) {
 }
 
   function showModalforOpenTask(task_id) {
+      console.log("showModalforOpenTask for task " + task_id)
       fetch("/get-task-infos/" + task_id)
           .then(response => response.json())
           .then(task => {
               if (task.error) {
                   console.error(task.error);
               } else {
-                  console.log(task.name)
-                  console.log(task.description)
-                  console.log(task.status)
+
                   $('#open_task_title').text(task.name); // Set the value attribute of the h5 element
                   $('#open_task_description').text(task.description);
-                  console.log("hi0" +  $('#task_status_select').value)
-                   $('#task_status_select').value = task.status
-                  console.log("hi" + task.status)
-                  console.log("ho" +  $('#task_status_select').value)
-                  $('#task_status_select').val(task.status);
-                  console.log("ho2" + $('#task_status_select').value)
+                  var selectElement = document.getElementById('task_status_select')
+                  var current = selectElement.options[selectElement.selectedIndex].value
 
-                  $('#task_status_select').on('change', function() {
-                        updateTaskStatus(task_id);
-                    });
-                  console.log($('#task_status_select'))
+                  if(task.status != null){
+                      $('#task_status_select').val(task.status)
+                  }
+                  else{
+                      $('#task_status_select').val(selectElement.options[0].value)
+                  }
 
                   // Show the modal
-                  $('#modal_open_task').modal('show');
+                  $('#modal_open_task_'+ task_id).modal('show');
               }
           })
           .catch(error => console.error(error));
