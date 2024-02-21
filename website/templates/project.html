@@ -18,7 +18,7 @@
 	<li class="section">
 		<div class="card">
 			<div class="card_header">
-				{{ section.name }}
+				<div class="editableContent" data-section-id="{{ section.id }}">{{ section.name }}</div>
 				<button type="button" class="btn-close btn-close-white" onClick="deleteSection({{ section.id }})"></button>
 			</div>
 			<div class="card_content">
@@ -170,20 +170,54 @@
             $('#modal_new_task').modal('show');
         }
 </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-    /*
-        $(document).ready(function() {
-            $('#emailInput').select2({
-                tags: true,
-                tokenSeparators: [',', ' '],
-                placeholder: "Entrez les adresses e-mail"
-            });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+document.querySelectorAll('.editableContent').forEach(function(element) {
+    element.addEventListener('click', function() {
+        // Créer un formulaire
+        var form = document.createElement('form');
+        form.method="post";
+        var sectionId = this.getAttribute('data-section-id');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Empêcher l'envoi du formulaire par défaut
+            var newText = input.value.trim();
+            this.parentNode.textContent = newText; // Remplacer l'input par le nouveau texte
         });
-*/
 
-    </script>
+        // Créer un input de type texte à l'intérieur du formulaire
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'new_name';
+        input.value = this.textContent.trim(); // Utiliser le texte actuel comme valeur par défaut
+	    input.classList.add('section_input');
+        input.select();
+        input.addEventListener('blur', function() {
+            form.submit(); // Soumettre le formulaire lorsque l'input perd le focus
+        });
 
+        var input_id = document.createElement('input');
+        input_id.name = 'id';
+        input_id.value = sectionId;
+        input_id.type = 'hidden';
 
+        // Créer un champ de formulaire caché pour l'action
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'action';
+        hiddenInput.value = 'rename_section';
+
+        // Ajouter les éléments au formulaire
+        form.appendChild(input);
+        form.appendChild(hiddenInput);
+        form.appendChild(input_id);
+        // Remplacer le contenu du div par le formulaire
+        this.textContent = '';
+        this.appendChild(form);
+
+        // Mettre le focus sur l'input
+        input.focus();
+    });
+});
+</script>
 {% endblock %}
