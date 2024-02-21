@@ -243,10 +243,10 @@ function updateTaskStatus(task_id) {
                   console.log(task.status)
                   $('#open_task_title').text(task.name); // Set the value attribute of the h5 element
                   $('#open_task_description').text(task.description);
-                  console.log("hi0" + document.getElementById('#task_status_select').value)
-                  document.getElementById('#task_status_select').value = task.status
+                  console.log("hi0" +  $('#task_status_select').value)
+                   $('#task_status_select').value = task.status
                   console.log("hi" + task.status)
-                  console.log("ho" + document.getElementById('#task_status_select').value)
+                  console.log("ho" +  $('#task_status_select').value)
                   $('#task_status_select').val(task.status);
                   console.log("ho2" + $('#task_status_select').value)
 
