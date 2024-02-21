@@ -104,3 +104,32 @@ def delete_section():
         db.session.commit()
     return jsonify({})
 
+
+@views.route('/get-task-infos/<int:task_id>', methods=['GET'])
+def get_task(task_id):
+    task = Task.query.get(task_id)
+    if task:
+        return jsonify({'id': task.id, 'name': task.name, 'description': task.description, 'status': task.status})  # Return the task details
+    else:
+        return jsonify({'error': 'Task not found'}), 404  # Return an error if the task is not found
+
+
+@views.route('/update_task_status/<int:task_id>', methods=['POST'])
+def update_task_status(task_id):
+    task = Task.query.get(task_id)
+
+    if not task:
+        return 'Task not found.', 404
+
+    if request.method == 'POST':
+        new_status = request.json.get('status')
+
+        if not new_status:
+            return 'New task status not provided.', 400
+
+        # Update task status
+        task.status = new_status
+        db.session.commit()
+
+        flash(f'Task status updated: {new_status}', category='success')
+        return 'Task status updated successfully.', 200

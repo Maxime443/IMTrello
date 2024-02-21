@@ -43,3 +43,4 @@ class Task(db.Model):
     name = db.Column(db.String(10000))
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'))
     description = db.Column(db.String(10000))
+    status = db.Column(db.String(10000))

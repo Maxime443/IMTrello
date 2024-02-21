@@ -33,6 +33,14 @@
                 {{ task.name }}
 
 
+                  <div >
+                    <button type="button" class="btn btn-primary" onclick="showModalforOpenTask({{ task.id }})">
+                         Open
+                    </button>
+
+                  </div>
+
+
               </li>
           {% endfor %}
 
@@ -153,6 +161,36 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal_open_task">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="open_task_title">
+
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+           <div class="modal-body">
+                <div class="content" id="open_task_description">
+
+                </div>
+                <div class="open_task_status">
+                    <label for="task_status_select">Status</label>
+                    <select id="task_status_select" onchange="">
+                      <option value="todo">To Do</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
   function deleteSection(sectionId) {
   fetch("/delete-section", {
@@ -166,14 +204,67 @@
   function showModalforNewTask(sectionId) {
             // Set the value of the hidden input field with the project ID
             document.getElementById('task_section_id').value = sectionId;
-            console.log("section id is " + sectionId)
-            console.log("value id is " + document.getElementById('task_section_id').value)
+
             // Show the modal
             $('#modal_new_task').modal('show');
+  }
+function updateTaskStatus(task_id) {
+    const new_status = document.getElementById("task_status_select").value;
+
+    fetch('/update_task_status/' + task_id, {
+    method: "POST",
+       headers: {
+            'Content-Type': 'application/json'
+        },
+    body: JSON.stringify({ status: new_status }),
+  }).then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update task status');
         }
+        console.log('Task status updated successfully.');
+        //window.location.href = "/project/" + {{ project.id }};
+        // You can add additional handling here if needed
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+}
+
+  function showModalforOpenTask(task_id) {
+      fetch("/get-task-infos/" + task_id)
+          .then(response => response.json())
+          .then(task => {
+              if (task.error) {
+                  console.error(task.error);
+              } else {
+                  console.log(task.name)
+                  console.log(task.description)
+                  console.log(task.status)
+                  $('#open_task_title').text(task.name); // Set the value attribute of the h5 element
+                  $('#open_task_description').text(task.description);
+                  console.log("hi0" + document.getElementById('#task_status_select').value)
+                  document.getElementById('#task_status_select').value = task.status
+                  console.log("hi" + task.status)
+                  console.log("ho" + document.getElementById('#task_status_select').value)
+                  $('#task_status_select').val(task.status);
+                  console.log("ho2" + $('#task_status_select').value)
+
+                  $('#task_status_select').on('change', function() {
+                        updateTaskStatus(task_id);
+                    });
+                  console.log($('#task_status_select'))
+
+                  // Show the modal
+                  $('#modal_open_task').modal('show');
+              }
+          })
+          .catch(error => console.error(error));
+
+  }
+
 </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script>
     /*
         $(document).ready(function() {
