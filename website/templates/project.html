@@ -213,7 +213,7 @@
   }
 function updateTaskStatus(task_id) {
       var selectElement = document.getElementById("task_status_select")
-      console.log("updating task " + task_id + " to " + selectElement.options[selectElement.selectedIndex].value)
+
     const new_status = selectElement.options[selectElement.selectedIndex].value;
 
     fetch('/update_task_status/' + task_id, {
@@ -237,7 +237,7 @@ function updateTaskStatus(task_id) {
 }
 
   function showModalforOpenTask(task_id) {
-      console.log("showModalforOpenTask for task " + task_id)
+
       fetch("/get-task-infos/" + task_id)
           .then(response => response.json())
           .then(task => {
