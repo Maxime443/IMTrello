@@ -55,12 +55,12 @@ def delete_project():
 
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
-    flash('POST received', category='success')
     project = Project.query.get(project_id)
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     if request.method == 'POST':
         action = request.form.get('action')
+        print(action)
         if action == 'add_section':
             name = request.form.get('section_name')
             flash('Section added', category='success')
@@ -90,6 +90,17 @@ def project(project_id):
             section.tasks.append(new_task)
             db.session.commit()
 
+        elif action=='rename_section':
+            name = request.form.get('new_name')
+            section_id = request.form.get('id')
+            if len(name) < 1:
+                flash('Name is too short.', category='error')
+            else:
+                old_section = Section.query.get(section_id)
+                if old_section.name!=name:
+                    flash('Section renamed', category='success')
+                    old_section.name = name
+                    db.session.commit()
         else:
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
     return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
