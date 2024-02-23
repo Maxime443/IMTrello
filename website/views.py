@@ -84,9 +84,9 @@ def project(project_id):
             print(section_id)
             description = request.form.get('task_description')
             flash('Task added', category='success')
+            section = Section.query.get(section_id)
             new_task = Task(name="Task " + name, section_id=section_id, description=description)
             db.session.add(new_task)
-            section = Section.query.get(section_id)
             section.tasks.append(new_task)
             db.session.commit()
 
@@ -115,3 +115,14 @@ def delete_section():
         db.session.commit()
     return jsonify({})
 
+@views.route('/update_task_section', methods=['POST'])
+def update_task_section():
+    data = request.json
+    task_id = data.get('task_id')
+    new_section_id = data.get('new_section_id')
+    task = Task.query.get(task_id)
+    if task:
+        task.section_id = int(new_section_id)
+        db.session.commit()
+        return jsonify({'message': 'Task section updated successfully'})
+    return jsonify({'error': 'Task not found'}), 404

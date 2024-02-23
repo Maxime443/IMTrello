@@ -7,7 +7,7 @@
 {% block content
 %}
 <div display="flex">
-<h1 align="center">
+<h1 align="center" draggable="true">
     {{ project.name }}
 </h1>
 </div>
@@ -15,16 +15,16 @@
 
 <ol class="list-group list-group-flush" id="sections">
 	{% for section in project.sections %}
-	<li class="section">
+	<li class="section" id="section-{{ section.id }}">
 		<div class="card">
 			<div class="card_header">
 				<div class="editableContent" data-section-id="{{ section.id }}">{{ section.name }}</div>
-				<button type="button" class="btn-close btn-close-white" onClick="deleteSection({{ section.id }})"></button>
+				<button type="button" class="btn-close btn-close-white" onClick="deleteSection({{ section.id }},{{ project.id }})"></button>
 			</div>
 			<div class="card_content">
-				<ol class="list-group list-group-flush" id="list_task">
-					{% for task in section.tasks %}
-						<li >
+				<ol class="list-group list-group-flush task-list" data-section-id="{{ section.id }}">
+					{% for task in section.tasks | sort(attribute='order') %}
+						<li data-task-id="{{ task.id }}" draggable="true" class="li_task">
 							<div class="task">
 								{{ task.name }}
 							</div>
@@ -42,13 +42,14 @@
 	{% endfor %}
 	{% if user.type=='PROJECT_MANAGER' %}
 		<div class="add_section">
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_new_section">
-				New Section
+			<button type="button" class="btn_section btn btn-dark" onclick="createSectionForm()">
+				<i class="fas fa-plus"></i>New Section
 		    </button>
 		</div>
 	{% endif %}
 </ol>
 
+{#	Modal new_section#}
 <div class="modal fade" id="modal_new_section">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -79,6 +80,7 @@
     </div>
 </div>
 
+{#	Modal for sharing to devs #}
 <div class="modal fade" id="modal_share">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -112,6 +114,7 @@
     </div>
 </div>
 
+{#Modal for new_task#}
 <div class="modal fade" id="modal_new_task">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -122,102 +125,31 @@
                 <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST">
-            <input type="hidden" name="action" value="add_task">
-            <input type="hidden" name="task_section_id" id="task_section_id" value="">
-            <div class="modal-body">
-                        <div class="form-group">
-                            <label for="name">Task Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="task_name"
-                                   name="task_name"
-                                   placeholder="This task's name"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Task Description</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="task_description"
-                                   name="task_description"
-                                   placeholder="This task's description"/>
-                        </div>
-
-            </div>
-            <div class="modal-footer">
-                    <button action="add_task" type="submit" class="btn btn-primary" >Add Task</button>
-            </div>
+	            <input type="hidden" name="action" value="add_task">
+	            <input type="hidden" name="task_section_id" id="task_section_id" value="">
+	            <div class="modal-body">
+		            <div class="form-group">
+			            <label for="name">Task Name</label>
+			            <input type="text"
+			                   class="form-control"
+			                   id="task_name"
+			                   name="task_name"
+			                   placeholder="This task's name"/>
+		            </div>
+		            <div class="form-group">
+			            <label for="description">Task Description</label>
+			            <input type="text"
+			                   class="form-control"
+			                   id="task_description"
+			                   name="task_description"
+			                   placeholder="This task's description"/>
+		            </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button action="add_task" type="submit" class="btn btn-primary" >Add Task</button>
+	            </div>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-  function deleteSection(sectionId) {
-  fetch("/delete-section", {
-    method: "POST",
-    body: JSON.stringify({ sectionId: sectionId }),
-  }).then((_res) => {
-    window.location.href = "/project/" + {{ project.id }};
-  });
-  }
-
-  function showModalforNewTask(sectionId) {
-            // Set the value of the hidden input field with the project ID
-            document.getElementById('task_section_id').value = sectionId;
-            console.log("section id is " + sectionId)
-            console.log("value id is " + document.getElementById('task_section_id').value)
-            // Show the modal
-            $('#modal_new_task').modal('show');
-        }
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script>
-document.querySelectorAll('.editableContent').forEach(function(element) {
-    element.addEventListener('click', function() {
-        // Créer un formulaire
-        var form = document.createElement('form');
-        form.method="post";
-        var sectionId = this.getAttribute('data-section-id');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Empêcher l'envoi du formulaire par défaut
-            var newText = input.value.trim();
-            this.parentNode.textContent = newText; // Remplacer l'input par le nouveau texte
-        });
-
-        // Créer un input de type texte à l'intérieur du formulaire
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'new_name';
-        input.value = this.textContent.trim(); // Utiliser le texte actuel comme valeur par défaut
-	    input.classList.add('section_input');
-        input.select();
-        input.addEventListener('blur', function() {
-            form.submit(); // Soumettre le formulaire lorsque l'input perd le focus
-        });
-
-        var input_id = document.createElement('input');
-        input_id.name = 'id';
-        input_id.value = sectionId;
-        input_id.type = 'hidden';
-
-        // Créer un champ de formulaire caché pour l'action
-        var hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'action';
-        hiddenInput.value = 'rename_section';
-
-        // Ajouter les éléments au formulaire
-        form.appendChild(input);
-        form.appendChild(hiddenInput);
-        form.appendChild(input_id);
-        // Remplacer le contenu du div par le formulaire
-        this.textContent = '';
-        this.appendChild(form);
-
-        // Mettre le focus sur l'input
-        input.focus();
-    });
-});
-</script>
 {% endblock %}
