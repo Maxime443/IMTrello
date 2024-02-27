@@ -2,11 +2,13 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint, jsonify
 from flask_login import login_required, current_user
-from .models import Project, User, Section, Task
+from .models import Project, User, Section, Task, user_task
 from . import db
+from sqlalchemy.orm import joinedload
 import json
 
 views = Blueprint('views', __name__)
+
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -17,12 +19,13 @@ def home():
             name = request.form.get('name')
             description = request.form.get('description')
             date = request.form.get('end_date')
-            end_date=datetime.strptime(date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(date, '%Y-%m-%d').date()
             if len(name) < 1:
                 flash('Project name is too short.', category='error')
             else:
                 flash('Project added', category='success')
-                new_project = Project(name="Project " + name, admin_id=current_user.id, description=description, end_date=end_date, sections=[])
+                new_project = Project(name="Project " + name, admin_id=current_user.id, description=description,
+                                      end_date=end_date, sections=[])
                 db.session.add(new_project)
                 current_user.projects.append(new_project)
                 db.session.commit()
@@ -40,11 +43,12 @@ def home():
                 db.session.commit()
                 return redirect(url_for('views.home'))
 
-    return render_template("home.html",user=current_user)
+    return render_template("home.html", user=current_user)
+
 
 @views.route('/delete-project', methods=['POST'])
 def delete_project():
-    project = json.loads(request.data) # this function expects a JSON from the INDEX.js file
+    project = json.loads(request.data)  # this function expects a JSON from the INDEX.js file
     projectId = project['projectId']
     project = Project.query.get(projectId)
     if project:
@@ -53,12 +57,16 @@ def delete_project():
             db.session.commit()
     return jsonify({})
 
+
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
     flash('POST received', category='success')
     project = Project.query.get(project_id)
-    developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
+    developers = User.query.filter_by(
+        type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
+    user_task_records = developers
+
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'add_section':
@@ -72,11 +80,13 @@ def project(project_id):
         elif action == "add_developer":
             selected_emails = request.form.getlist('developer_emails')  # Récupérer les adresses e-mail sélectionnées
             print(selected_emails)
-            devs = User.query.filter(User.email.in_(selected_emails)).all()  # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
+            devs = User.query.filter(User.email.in_(
+                selected_emails)).all()  # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
             for developer in devs:
                 developer.projects.append(Project.query.get(project_id))
             db.session.commit()
-            return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
+            return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
+                                   user_task_records=user_task_records)
 
         elif action == 'add_task':
             name = request.form.get('task_name')
@@ -90,13 +100,49 @@ def project(project_id):
             section.tasks.append(new_task)
             db.session.commit()
 
+        elif action == "add_developer_to_task":
+            # Récupérer les adresses e-mail sélectionnées
+            task_id = request.form.get('task_id')
+
+            selected_emails = request.form.getlist('developer_emails_for_task')
+            task = Task.query.get(task_id)
+            if task:
+                flash('task found with id : ' + task_id, category='success')
+
+
+            devs = User.query.filter(User.email.in_(
+                selected_emails)).all()
+
+            # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
+            x = 0
+            dess = ""
+            for developer in devs:
+                if task not in developer.tasks:
+                    x += 1
+                    developer.tasks.append(task)
+                else :
+                    dess += developer.first_name + " "
+                    x -= 1
+            y = str(x)
+            flash('current devs are : ' + dess, category='success')
+            flash('developers added : ' + y, category='success')
+
+            db.session.commit()
+            return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
+                                   user_task_records=user_task_records)
+
+
+
         else:
-            return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
-    return render_template('project.html', user=current_user, project=project,user_emails=user_emails)
+            return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
+                                   user_task_records=user_task_records)
+    return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
+                           user_task_records=user_task_records)
+
 
 @views.route('/delete-section', methods=['POST'])
 def delete_section():
-    section = json.loads(request.data) # this function expects a JSON from the INDEX.js file
+    section = json.loads(request.data)  # this function expects a JSON from the INDEX.js file
     sectionId = section['sectionId']
     section = Section.query.get(sectionId)
     if section:
@@ -104,12 +150,29 @@ def delete_section():
         db.session.commit()
     return jsonify({})
 
+@views.route('/remove-dev', methods=['POST'])
+def remove_dev():
+    res = json.loads(request.data)  # Use request.get_json() to parse JSON data
+    task_id = res['task_id']  # Access task_id from the JSON data
+    user_id = res['user_id']  # Access user from the JSON data
+
+    # Assuming db is the SQLAlchemy database object
+    task = Task.query.get(task_id)
+    user = User.query.get(user_id)
+    if task in user.tasks:
+        # Assuming db is the SQLAlchemy database object
+        user.tasks.remove(task)  # Use remove() to remove task from user's tasks
+        db.session.commit()
+    return jsonify({})
+
 
 @views.route('/get-task-infos/<int:task_id>', methods=['GET'])
 def get_task(task_id):
+    flash('Task added', category='success')
     task = Task.query.get(task_id)
     if task:
-        return jsonify({'id': task.id, 'name': task.name, 'description': task.description, 'status': task.status})  # Return the task details
+        return jsonify({'id': task.id, 'name': task.name, 'description': task.description,
+                        'status': task.status})  # Return the task details
     else:
         return jsonify({'error': 'Task not found'}), 404  # Return an error if the task is not found
 
