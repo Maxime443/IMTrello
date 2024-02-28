@@ -34,7 +34,152 @@ user.type=='PROJECT_MANAGER' %}
         >
           {% for task in section.tasks | sort(attribute='order') %}
           <li data-task-id="{{ task.id }}" draggable="true" class="li_task">
-            <div class="task">{{ task.name }}</div>
+
+              <div class="task" data-bs-toggle="modal" data-bs-target="#modal_open_task_{{ task.id }}">{{ task.name }}
+
+              </div>
+                  <button
+                          type="button"
+                          class="btn-close btn-close-white"
+                          onClick="deleteTask({{ task.id }},{{ section.id }},{{ project.id }})"
+                  ></button>
+
+
+
+
+
+          <div class="modal fade" id="modal_open_task_{{ task.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 id="open_task_title">
+                                        {{ task.name }}
+                                    </h5>
+                                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                               <div class="modal-body">
+                                    <div class="content" id="open_task_description">
+
+                                    </div>
+                                    <div class="open_task_status">
+                                        <label for="task_status_select">Status </label>
+
+                                        <select id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
+                                            {% if task.status == "todo" %}
+                                                <option value="uncompleted" selected>Uncompleted</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="blocked">Blocked</option>
+                                            {% elif task.status == "completed" %}
+                                                <option value="uncompleted">Uncompleted</option>
+                                                <option value="completed" selected>Completed</option>
+                                                <option value="blocked">Blocked</option>
+                                            {% elif task.status == "blocked" %}
+                                                <option value="uncompleted">Uncompleted</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="blocked" selected>Blocked</option>
+                                            {% else %}
+                                                <option value="uncompleted">Uncompleted</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="blocked">Blocked</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+
+                                   <div class="open_task_priority">
+                                   {{ task.priority }}
+                                        <label for="task_priority_select">Priority </label>
+
+                                        <select id="task_priority_select" onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})">
+                                            {% if task.priority == "low" %}
+                                                <option value="low" selected>Low</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="high">High</option>
+                                            {% elif task.priority == "medium" %}
+                                                <option value="low">Low</option>
+                                                <option value="medium" selected>Medium</option>
+                                                <option value="high">High</option>
+                                            {% else %}
+                                                <option value="uncompleted">Low</option>
+                                                <option value="completed">Medium</option>
+                                                <option value="blocked" selected>High</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                   <div>
+                                       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_share_task_{{ task.id }}">
+                                                Share
+                                        </button>
+                                       <div>
+                                           Devs on this task :
+                                       </div>
+                                            <div id="dev_list">
+                                                <ul class="list-group"> <!-- Added ul tag to enclose list items -->
+                                                    {% for user_record in user_task_records %}
+                                                        {%  if task in user_record.tasks %}
+                                                            <li class="list-group-item">
+                                                                {{ user_record.first_name }}
+                                                                <button class="btn-close" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }})"></button><!-- Displaying the name of the user associated with the task -->
+                                                            </li>
+                                                        {%  endif %}
+
+                                                    {% endfor %}
+
+
+                                                </ul>
+
+                                        </div>
+
+
+
+
+                                   </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+              <div class="modal fade" id="modal_share_task_{{ task.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        Add developers
+                                    </h5>
+                                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+
+                                 <form method="POST" action="/project/{{ project.id }}">
+                                 <input type="hidden" name="action" value= "add_developer_to_task">
+                                 <input type="hidden" id="task_id_{{ task.id }}" name="task_id" value={{ task.id }}>
+                                 <div class="modal-body">
+                                 <label for="name">Share to</label>
+                                 <div class="form-group">
+                                     <select id="developer_emails_for_task_{{ task.id }}"
+                                             name="developer_emails_for_task"
+                                             class="js-example-basic-multiple"
+                                             multiple="multiple">
+                                         {% for email in user_emails %}
+                                         <option value="{{ email }}">{{ email }}</option>
+                                         {% endfor %}
+                                     </select>
+                                 </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" >Add</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
           </li>
           {% endfor %}
         </ol>
@@ -212,7 +357,9 @@ user.type=='PROJECT_MANAGER' %}
                   style="color: rgb(110, 209, 70)"
                 ></i>
               </span>
-              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
+              <h3 class="fw-bold fs-3 fs-md-3">
+                  {{ user.tasks | selectattr('status', 'equalto', 'completed') | map(attribute='status') | list | length }}
+              </h3>
             </div>
             <div class="w-100 mt-2 py-1">
               <p class="opacity-50 mb-0 fw-semibold fs-6">Completed</p>
@@ -239,7 +386,9 @@ user.type=='PROJECT_MANAGER' %}
                   style="color: rgb(245, 165, 35)"
                 ></i>
               </span>
-              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
+              <h3 class="fw-bold fs-3 fs-md-3">
+                  {{ user.tasks | selectattr('status', 'equalto', 'uncompleted') | map(attribute='status') | list | length }}
+              </h3>
             </div>
             <div class="w-100 mt-2 py-1">
               <p class="opacity-50 mb-0 fw-semibold fs-6">Uncompleted</p>
@@ -264,7 +413,9 @@ user.type=='PROJECT_MANAGER' %}
                   style="color: rgb(245, 80, 35)"
                 ></i>
               </span>
-              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
+              <h3 class="fw-bold fs-3 fs-md-3">
+                  {{ user.tasks | selectattr('status', 'equalto', 'blocked') | map(attribute='status') | list | length }}
+              </h3>
             </div>
             <div class="w-100 mt-2 py-1">
               <p class="opacity-50 mb-0 fw-semibold fs-6">Blocked</p>
@@ -305,20 +456,41 @@ user.type=='PROJECT_MANAGER' %}
           </h6>
           <small class="fw-medium fst-italic opacity-50">General</small>
           <div class="d-flex flex-row mt-3 mt-md-2">
-            <div class="">
-              <span
-                class="badge text-warning"
-                style="background-color: rgba(245, 166, 35, 0.125)"
-                >in-progress</span
-              >
+
+            <div>
+                <span
+                    {% if task.status == 'completed' %}
+                        class="badge text-success"
+                        style="background-color: rgba(35,245,154,0.12)"
+                    {% elif task.status == 'uncompleted' %}
+                        class="badge text-warning"
+                        style="background-color: rgba(245, 166, 35, 0.125)"
+                    {% else %}
+                        class="badge text-danger"
+                        style="background-color: rgba(245,35,35,0.12)"
+                    {% endif %}
+
+                >
+                    {{ task.status }}
+                </span>
             </div>
+
             <div class="d-flex align-items-center">
               <i class="bi bi-dot"></i>
               <div class="">
                 <span
-                  class="badge text-warning"
-                  style="background-color: rgba(245, 166, 35, 0.125)"
-                  >medium</span
+                    {% if task.priority == 'low' %}
+                        class="badge text-success"
+                        style="background-color: rgba(35,245,42,0.12)"
+                    {% elif task.priority == 'medium' %}
+                        class="badge text-warning"
+                        style="background-color: rgba(245, 166, 35, 0.125)"
+                    {% else %}
+                        class="badge text-danger"
+                        style="background-color: rgba(245,35,35,0.12)"
+                    {% endif %}
+
+                  >{{ task.priority }}</span
                 >
               </div>
             </div>
@@ -328,15 +500,15 @@ user.type=='PROJECT_MANAGER' %}
           class="col-12 col-md-4 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end"
         >
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'completed', {{ project.id }})">
               <i class="bi bi-check-circle fs-6 text-success"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'uncompleted', {{ project.id }})">
               <i class="bi bi-three-dots fs-6 text-warning"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'blocked', {{ project.id }})">
               <i class="bi bi-x-circle fs-6 text-danger"></i></button
           ></span>
           <span

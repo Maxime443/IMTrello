@@ -30,6 +30,15 @@ function deleteSection(sectionId,projectId) {
   });
   }
 
+function deleteTask(taskId,sectionId,projectId) {
+  fetch("/delete-task", {
+    method: "POST",
+    body: JSON.stringify( { taskId: taskId })
+  }).then((_res) => {
+    window.location.href = "/project/" + projectId;
+  });
+  }
+
 function showModalforNewTask(sectionId) {
             // Set the value of the hidden input field with the project ID
             document.getElementById('task_section_id').value = sectionId;
@@ -213,3 +222,50 @@ function closeSectionForm() {
         // Remettre le bouton "New Section" seulement s'il n'existe pas déjà
         $('.add_section').append('<button type="button" class="btn_section btn btn-dark"><i class="fas fa-plus"></i>New Section</button>');
 }}
+
+function updateTaskStatus (task_id, value, projectId) {
+
+      fetch ( '/update_task_status/' + task_id , {
+          method : "POST" ,
+          headers : {
+              'Content-Type' : 'application/json'
+          } ,
+          body : JSON.stringify ( { status : value } ) ,
+      } ).then ( response => {
+          if ( ! response.ok ) {
+              throw new Error ( 'Failed to update task status' );
+          }
+          console.log ( 'Task status updated successfully.' );
+          window.location.href = "/project/" + projectId;
+          // You can add additional handling here if needed
+      } )
+          .catch ( error => {
+              console.error ( 'Error:' , error );
+          } );
+
+}
+
+function updateTaskPriority (task_id, value, projectId) {
+
+      fetch ( '/update_task_priority/' + task_id , {
+          method : "POST" ,
+          headers : {
+              'Content-Type' : 'application/json'
+          } ,
+          body : JSON.stringify ( { priority : value } ) ,
+      } ).then ( response => {
+          if ( ! response.ok ) {
+              throw new Error ( 'Failed to update task priority' );
+          }
+          console.log ( 'Task priority updated successfully.' );
+          window.location.href = "/project/" + projectId;
+          // You can add additional handling here if needed
+      } )
+          .catch ( error => {
+              console.error ( 'Error:' , error );
+          } );
+
+}
+
+
+
