@@ -3,7 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -15,11 +25,21 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-    <script src="{{ url_for('static', filename='index.js') }}"></script>
+    <script src="{{ url_for('static', filename='index.js') }}" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
       <button
         class="navbar-toggler"
         type="button"
@@ -34,55 +54,15 @@
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% if user.type=='PROJECT_MANAGER' %}
-              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal1">New Project</button>
-              <div class="modal fade" id="modal1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                Nouveau Projet
-                            </h5>
-                            <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form method="POST">
-                        <input type="hidden" name="action" value="create_project">
-                        <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="name">Project name</label>
-                                        <input type="name"
-                                               class="form-control"
-                                               id="name"
-                                               name="name"
-                                               placeholder="Your project name"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <input type="text"
-                                               class="form-control"
-                                               id="description"
-                                               name="description"
-                                               placeholder="Describe your project"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="end_date">End of your project</label>
-                                        <input type="date"
-                                               class="form-control"
-                                               id="end_date"
-                                               name="end_date"
-                                               placeholder=""/>
-                                    </div>
-                        </div>
-                        <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" >Créer Projet</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-          {% block share %}{% endblock %}
-          {% endif %}
-
-          {% else %}
+          <button
+            type="button"
+            class="btn btn-dark"
+            data-bs-toggle="modal"
+            data-bs-target="#modal1"
+          >
+            New Project
+          </button>
+          {% block share %}{% endblock %} {% endif %} {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
           <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
 
@@ -90,27 +70,33 @@
         </div>
       </div>
     </nav>
-
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %} {% if category ==
+      'error' %}
+      <div
+        class="alert alert-danger alter-dismissable fade show flash"
+        role="alert"
+      >
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {% else %}
+        <div
+          class="alert alert-success alter-dismissable fade show flash"
+          role="alert"
+        >
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %}
+        {% endblock %}
+      </div>
     </div>
-    {% else %}
-    <div class="alert alert-success alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
-
-    <div class="container">{% block content %} {% endblock %}</div>
-      <script
+    <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
       crossorigin="anonymous"
@@ -125,9 +111,64 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous">
-    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <div class="modal fade" id="modal1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nouveau Projet</h5>
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <form method="POST">
+            <input type="hidden" name="action" value="create_project" />
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Project name</label>
+                <input
+                  type="name"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="Your project name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Describe your project"
+                />
+              </div>
+              <div class="form-group">
+                <label for="end_date">End of your project</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="end_date"
+                  name="end_date"
+                  placeholder=""
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">
+                Créer Projet
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
