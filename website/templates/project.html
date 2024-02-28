@@ -1,252 +1,352 @@
-{% extends "base.html" %} {% block title %}Project{% endblock %}
-{% block share %}
-	{% if user.type=='PROJECT_MANAGER' %}
-		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_share">Share</button>
-	{% endif %}
-{% endblock %}
-{% block content %}
-{% if user.type=='PROJECT_MANAGER' %}
+{% extends "base.html" %} {% block title %}Project{% endblock %} {% block share
+%} {% if user.type=='PROJECT_MANAGER' %}
+<button
+  type="button"
+  class="btn btn-ouCtline-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#modal_share"
+>
+  Share
+</button>
+{% endif %} {% endblock %} {% block content %} {% if
+user.type=='PROJECT_MANAGER' %}
 <div display="flex">
-<h1 align="center" draggable="true">
-    {{ project.name }}
-</h1>
+  <h1 align="center" draggable="true">{{ project.name }}</h1>
 </div>
 <ol class="list-group list-group-flush" id="sections">
-	{% for section in project.sections %}
-	<li class="section" id="section-{{ section.id }}">
-		<div class="carte">
-			<div class="card_header">
-				<div class="editableContent" data-section-id="{{ section.id }}">{{ section.name }}</div>
-				<button type="button" class="btn-close btn-close-white" onClick="deleteSection({{ section.id }},{{ project.id }})"></button>
-			</div>
-			<div class="card_content">
-				<ol class="list-group list-group-flush task-list" data-section-id="{{ section.id }}">
-					{% for task in section.tasks | sort(attribute='order') %}
-						<li data-task-id="{{ task.id }}" draggable="true" class="li_task">
-							<div class="task">
-								{{ task.name }}
-							</div>
-						</li>
-					{% endfor %}
-				</ol>
-			</div>
-			{% if user.type=='PROJECT_MANAGER' %}
-				<div class="card_footer">
-					<button type="button" class="add-card-btn btn-dark btn" onclick="showModalforNewTask({{ section.id }})"><i class="fas fa-plus"></i>Add task</button>
-				</div>
-			{% endif %}
-		</div>
-	</li>
-	{% endfor %}
-	{% if user.type=='PROJECT_MANAGER' %}
-		<div class="add_section">
-			<button type="button" class="btn_section btn btn-dark" onclick="createSectionForm()">
-				<i class="fas fa-plus"></i>New Section
-		    </button>
-		</div>
-	{% endif %}
+  {% for section in project.sections %}
+  <li class="section" id="section-{{ section.id }}">
+    <div class="carte">
+      <div class="card_header">
+        <div class="editableContent" data-section-id="{{ section.id }}">
+          {{ section.name }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          onClick="deleteSection({{ section.id }},{{ project.id }})"
+        ></button>
+      </div>
+      <div class="card_content">
+        <ol
+          class="list-group list-group-flush task-list"
+          data-section-id="{{ section.id }}"
+        >
+          {% for task in section.tasks | sort(attribute='order') %}
+          <li data-task-id="{{ task.id }}" draggable="true" class="li_task">
+            <div class="task">{{ task.name }}</div>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+      {% if user.type=='PROJECT_MANAGER' %}
+      <div class="card_footer">
+        <button
+          type="button"
+          class="add-card-btn btn-dark btn"
+          onclick="showModalforNewTask({{ section.id }})"
+        >
+          <i class="fas fa-plus"></i>Add task
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %} {% if user.type=='PROJECT_MANAGER' %}
+  <div class="add_section">
+    <button
+      type="button"
+      class="btn_section btn btn-dark"
+      onclick="createSectionForm()"
+    >
+      <i class="fas fa-plus"></i>New Section
+    </button>
+  </div>
+  {% endif %}
 </ol>
 
-{#	Modal new_section#}
+{# Modal new_section#}
 <div class="modal fade" id="modal_new_section">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    New Section
-                </h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST">
-            <input type="hidden" name="action" value="add_section">
-            <div class="modal-body">
-                        <div class="form-group">
-                            <label for="name">Section Name</label>
-                            <input type="text"
-                                   class="form-control"
-                                   id="section_name"
-                                   name="section_name"
-                                   placeholder="This section's name"/>
-                        </div>
-
-            </div>
-            <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" >Create Section</button>
-            </div>
-            </form>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Section</h5>
+        <button
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form method="POST">
+        <input type="hidden" name="action" value="add_section" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Section Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="section_name"
+              name="section_name"
+              placeholder="This section's name"
+            />
+          </div>
         </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Create Section</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
-{#	Modal for sharing to devs #}
+{# Modal for sharing to devs #}
 <div class="modal fade" id="modal_share">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Add developers
-                </h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <input type="hidden" name="action" value="add_developer">
-             <form method="POST" action="/project/{{ project.id }}">
-             <input type="hidden" name="action" value= "add_developer">
-	         <div class="modal-body">
-             <label for="name">Share to</label>
-	         <div class="form-group">
-                 <select id="developer_emails"
-			             name="developer_emails"
-			             class="js-example-basic-multiple"
-			             multiple="multiple">
-			         {% for email in user_emails %}
-			         <option value="{{ email }}">{{ email }}</option>
-			         {% endfor %}
-			     </select>
-	         </div>
-            </div>
-            <div class="modal-footer">
-	            <button type="submit" class="btn btn-primary" >Add</button>
-            </div>
-            </form>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add developers</h5>
+        <button
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <input type="hidden" name="action" value="add_developer" />
+      <form method="POST" action="/project/{{ project.id }}">
+        <input type="hidden" name="action" value="add_developer" />
+        <div class="modal-body">
+          <label for="name">Share to</label>
+          <div class="form-group">
+            <select
+              id="developer_emails"
+              name="developer_emails"
+              class="js-example-basic-multiple"
+              multiple="multiple"
+            >
+              {% for email in user_emails %}
+              <option value="{{ email }}">{{ email }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
 {#Modal for new_task#}
 <div class="modal fade" id="modal_new_task">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    New Task
-                </h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST">
-	            <input type="hidden" name="action" value="add_task">
-	            <input type="hidden" name="task_section_id" id="task_section_id" value="">
-	            <div class="modal-body">
-		            <div class="form-group">
-			            <label for="name">Task Name</label>
-			            <input type="text"
-			                   class="form-control"
-			                   id="task_name"
-			                   name="task_name"
-			                   placeholder="This task's name"/>
-		            </div>
-		            <div class="form-group">
-			            <label for="description">Task Description</label>
-			            <input type="text"
-			                   class="form-control"
-			                   id="task_description"
-			                   name="task_description"
-			                   placeholder="This task's description"/>
-		            </div>
-	            </div>
-	            <div class="modal-footer">
-	                <button action="add_task" type="submit" class="btn btn-primary" >Add Task</button>
-	            </div>
-            </form>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Task</h5>
+        <button
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form method="POST">
+        <input type="hidden" name="action" value="add_task" />
+        <input
+          type="hidden"
+          name="task_section_id"
+          id="task_section_id"
+          value=""
+        />
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Task Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="task_name"
+              name="task_name"
+              placeholder="This task's name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="description">Task Description</label>
+            <input
+              type="text"
+              class="form-control"
+              id="task_description"
+              name="task_description"
+              placeholder="This task's description"
+            />
+          </div>
         </div>
+        <div class="modal-footer">
+          <button action="add_task" type="submit" class="btn btn-primary">
+            Add Task
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% else %}
 <div display="flex">
-	<h1 align="center">
-	    {{ project.name }}
-	</h1>
+  <h1 align="center">{{ project.name }}</h1>
 </div>
 <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header h-100 border-0 rounded-3 shadow text-decoration-none">
-                        <div class="card-body justify-content-center align-items-center">
-	                        <div class="w-100 d-flex justify-content-between align-items-center">
-		                        <span class="rounded-3" style="background-color: rgba(110, 209, 70, 0.125);">
-			                        <i class="bi bi-check-lg fs-4 p-2" style="color: rgb(110, 209, 70);"></i>
-		                        </span>
-		                        <h3 class="fw-bold fs-3 fs-md-3">2</h3>
-	                        </div>
-	                        <div class="w-100 mt-2 py-1">
-	                            <p class="opacity-50 mb-0 fw-semibold fs-6">Completed</p>
-                            </div>
-                        </div>
-                    </div>
-				</div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div
+          class="card-header h-100 border-0 rounded-3 shadow text-decoration-none"
+        >
+          <div class="card-body justify-content-center align-items-center">
+            <div
+              class="w-100 d-flex justify-content-between align-items-center"
+            >
+              <span
+                class="rounded-3"
+                style="background-color: rgba(110, 209, 70, 0.125)"
+              >
+                <i
+                  class="bi bi-check-lg fs-4 p-2"
+                  style="color: rgb(110, 209, 70)"
+                ></i>
+              </span>
+              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
             </div>
-			<div class="col-md-4">
-                <div class="card">
-                    <div class="card-header h-100 border-0 rounded-3 shadow text-decoration-none">
-                        <div class="card-body justify-content-center align-items-center">
-	                        <div class="w-100 d-flex justify-content-between align-items-center">
-		                        <span class="rounded-3" style="background-color: rgba(245, 165, 35, 0.125);">
-			                        <i class="bi bi-three-dots fs-4 p-2" style="color: rgb(245, 165, 35);"></i>
-		                        </span>
-		                        <h3 class="fw-bold fs-3 fs-md-3">2</h3>
-	                        </div>
-	                        <div class="w-100 mt-2 py-1">
-	                            <p class="opacity-50 mb-0 fw-semibold fs-6">Uncompleted</p>
-                            </div>
-                        </div>
-                    </div>
-				</div>
+            <div class="w-100 mt-2 py-1">
+              <p class="opacity-50 mb-0 fw-semibold fs-6">Completed</p>
             </div>
-			 <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header h-100 border-0 rounded-3 shadow ">
-                        <div class="card-body justify-content-center align-items-center">
-	                        <div class="w-100 d-flex justify-content-between align-items-center">
-		                        <span class="rounded-3" style="background-color: rgba(245, 80, 35, 0.125);">
-			                        <i class="bi bi-x-lg fs-4 p-2" style="color:  rgb(245, 80, 35);"></i>
-		                        </span>
-		                        <h3 class="fw-bold fs-3 fs-md-3">2</h3>
-	                        </div>
-	                        <div class="w-100 mt-2 py-1">
-	                            <p class="opacity-50 mb-0 fw-semibold fs-6">Blocked</p>
-                            </div>
-                        </div>
-                    </div>
-				</div>
-            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div
+          class="card-header h-100 border-0 rounded-3 shadow text-decoration-none"
+        >
+          <div class="card-body justify-content-center align-items-center">
+            <div
+              class="w-100 d-flex justify-content-between align-items-center"
+            >
+              <span
+                class="rounded-3"
+                style="background-color: rgba(245, 165, 35, 0.125)"
+              >
+                <i
+                  class="bi bi-three-dots fs-4 p-2"
+                  style="color: rgb(245, 165, 35)"
+                ></i>
+              </span>
+              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
+            </div>
+            <div class="w-100 mt-2 py-1">
+              <p class="opacity-50 mb-0 fw-semibold fs-6">Uncompleted</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header h-100 border-0 rounded-3 shadow">
+          <div class="card-body justify-content-center align-items-center">
+            <div
+              class="w-100 d-flex justify-content-between align-items-center"
+            >
+              <span
+                class="rounded-3"
+                style="background-color: rgba(245, 80, 35, 0.125)"
+              >
+                <i
+                  class="bi bi-x-lg fs-4 p-2"
+                  style="color: rgb(245, 80, 35)"
+                ></i>
+              </span>
+              <h3 class="fw-bold fs-3 fs-md-3">2</h3>
+            </div>
+            <div class="w-100 mt-2 py-1">
+              <p class="opacity-50 mb-0 fw-semibold fs-6">Blocked</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="container mt-5">
-<span class="w-100 w-md-50 fw-bolder"><h4 class="mb-4">Tasks</h4></span>
-	<div class="row justify-content-center">
-		<div class="col-md-6">
-			<div class="input-group mb-3">
-				<input placeholder="Search tasks" type="text" class="w-100 w-md-50 shadow-none border border-2 border-secondary-subtle opacity-50 form-control">
-				<div class="input-group-append">
-					<button class="btn btn-outline-secondary" type="button">Search</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	{% for task in user.tasks %}
-		<div class="card rounded-3 h-100 shadow mb-4 border-0 py-3">
-			<div class="card-body pb-0">
-				<div class="row">
-					<div class="col-12 col-md-8">
-						<h6 class="card-title fw-bold mb-0"><a class="link-secondary-alt text-decoration-none">{{ task.name }}</a></h6>
-						<small class="fw-medium fst-italic opacity-50">General</small>
-						<div class="d-flex flex-row mt-3 mt-md-2">
-							<div class=""><span class="badge text-warning" style="background-color: rgba(245, 166, 35, 0.125);">in-progress</span></div>
-							<div class="d-flex align-items-center"><i class="bi bi-dot"></i>
-								<div class=""><span class="badge text-warning" style="background-color: rgba(245, 166, 35, 0.125);">medium</span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 col-md-4 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
-						<span><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1"><i class="bi bi-check-circle fs-6 text-success"></i></button></span>
-						<span><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1"><i class="bi bi-three-dots fs-6 text-warning"></i></button></span>
-						<span><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1"><i class="bi bi-x-circle fs-6 text-danger"></i></button></span>
-						<span><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1"><i class="bi bi-chat fs-6 text-primary"></i></button></span>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endfor %}
+  <span class="w-100 w-md-50 fw-bolder"><h4 class="mb-4">Tasks</h4></span>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="input-group mb-3">
+        <input
+          placeholder="Search tasks"
+          type="text"
+          class="w-100 w-md-50 shadow-none border border-2 border-secondary-subtle opacity-50 form-control"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% for task in user.tasks %}
+  <div class="card rounded-3 h-100 shadow mb-4 border-0 py-3">
+    <div class="card-body pb-0">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <h6 class="card-title fw-bold mb-0">
+            <a class="link-secondary-alt text-decoration-none"
+              >{{ task.name }}</a
+            >
+          </h6>
+          <small class="fw-medium fst-italic opacity-50">General</small>
+          <div class="d-flex flex-row mt-3 mt-md-2">
+            <div class="">
+              <span
+                class="badge text-warning"
+                style="background-color: rgba(245, 166, 35, 0.125)"
+                >in-progress</span
+              >
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="bi bi-dot"></i>
+              <div class="">
+                <span
+                  class="badge text-warning"
+                  style="background-color: rgba(245, 166, 35, 0.125)"
+                  >medium</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-12 col-md-4 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end"
+        >
+          <span
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+              <i class="bi bi-check-circle fs-6 text-success"></i></button
+          ></span>
+          <span
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+              <i class="bi bi-three-dots fs-6 text-warning"></i></button
+          ></span>
+          <span
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+              <i class="bi bi-x-circle fs-6 text-danger"></i></button
+          ></span>
+          <span
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+              <i class="bi bi-chat fs-6 text-primary"></i></button
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}
