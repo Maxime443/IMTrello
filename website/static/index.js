@@ -269,3 +269,14 @@ function updateTaskPriority (task_id, value, projectId) {
 
 
 
+
+
+function remove_dev_from_task(user_id, task_id, project_id) {
+  fetch("/remove-dev", {
+    method: "POST",
+    body: JSON.stringify({ user_id : user_id ,task_id : task_id}),
+  }).then((_res) => {
+    window.location.href = "/project/" + project_id;
+  });
+  }
+

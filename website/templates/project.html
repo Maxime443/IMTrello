@@ -118,7 +118,7 @@ user.type=='PROJECT_MANAGER' %}
                                                         {%  if task in user_record.tasks %}
                                                             <li class="list-group-item">
                                                                 {{ user_record.first_name }}
-                                                                <button class="btn-close" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }})"></button><!-- Displaying the name of the user associated with the task -->
+                                                                <button class="btn-close" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
                                                             </li>
                                                         {%  endif %}
 
