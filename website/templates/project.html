@@ -12,6 +12,14 @@
 user.type=='PROJECT_MANAGER' %}
 <div display="flex">
   <h1 align="center" draggable="true">{{ project.name }}</h1>
+  <button
+  type="button"
+  class="btn btn-outline-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#modal_share"
+>
+  Share
+</button>
 </div>
 <ol class="list-group list-group-flush" id="sections">
   {% for section in project.sections %}
@@ -505,8 +513,7 @@ user.type=='PROJECT_MANAGER' %}
     </div>
   </div>
   {% for task in user.tasks %}
-  <div class="task-card rounded-3 h-100 shadow mb-4 border-0 py-3">
-  <div class="card rounded-3 h-100 shadow mb-4 border-0 py-3" data-bs-toggle="modal" data-bs-target="#modal_open_task_dev_{{ task.id }}">
+  <div class="card task-card rounded-3 h-100 shadow mb-4 border-0 py-3">
     <div class="card-body pb-0">
       <div class="row">
         <div class="col-12 col-md-8">
