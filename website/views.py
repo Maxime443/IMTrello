@@ -101,8 +101,7 @@ def project(project_id):
 
             selected_emails = request.form.getlist('developer_emails_for_task')
             task = Task.query.get(task_id)
-            if task:
-                flash('task found with id : ' + task_id, category='success')
+
 
             devs = User.query.filter(User.email.in_(
                 selected_emails)).all()

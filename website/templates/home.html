@@ -9,9 +9,9 @@
     You are a developer
     {% endif %}
 </h1>
-<ul class="list-group list-group-flush" id="notes">
+<ul class="list-group  project-style" id="notes">
   {% for project in user.projects %}
-  <li class="list-group-item">
+  <li class="list-group-item ">
     {{ project.name }}
     <button type="button" class="btn btn-primary" onClick="open_Project({{ project.id }})">
         Open

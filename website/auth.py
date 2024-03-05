@@ -44,7 +44,7 @@ def sign_up():
         password2 = request.form.get('password2')
         type = request.form.get('user_type')
         user = User.query.filter_by(email=email).first()
-        experience = request.form.get('user_experience')
+        user_experience = request.form.get('user_experience')
         if user:
             flash('Email already exists.', category='error')
         elif len(email) < 4:
