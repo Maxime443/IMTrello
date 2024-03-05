@@ -176,6 +176,7 @@ a {
 	align-items: center;
 	padding-bottom: 1rem;
 	padding-top: 1rem;
+	margin:0;
 	border-bottom: 1px solid var(--c-gray-600);
 	@media (max-width: 1200px) {
 		border-bottom: 0;
@@ -186,8 +187,8 @@ a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 32px;
-	height: 32px;
+	width: 65px;
+	height: 60px;
 }
 
 .logo-title {
