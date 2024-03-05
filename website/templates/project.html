@@ -23,7 +23,7 @@ user.type=='PROJECT_MANAGER' %}
         </div>
         <button
           type="button"
-          class="btn-close btn-close-white"
+          class="btn-close close-delete-section btn-close-white"
           onClick="deleteSection({{ section.id }},{{ project.id }})"
         ></button>
       </div>
@@ -85,7 +85,7 @@ user.type=='PROJECT_MANAGER' %}
               </div>
                   <button
                           type="button"
-                          class="btn-close btn-close-white"
+                          class="btn-close close-delete-task btn-close-white"
                           onClick="deleteTask({{ task.id }},{{ section.id }},{{ project.id }})"
                   ></button>
 
@@ -95,26 +95,25 @@ user.type=='PROJECT_MANAGER' %}
 
           <div class="modal fade" id="modal_open_task_{{ task.id }}">
                         <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
+                            <div class="modal-content black-modal">
+                                <div class="modal-header ">
+
                                     <h5 id="open_task_title">
                                         {{ task.name }}
                                     </h5>
 
-
-                                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button class="btn-close close-task" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                               <div class="modal-body">
-                                    <div class="content" id="open_task_description">
+                               <div class="modal-body task-modal-project-manager">
 
-                                    </div>
+
                                     <div class="open_task_status">
+                                    <div class="form-group">
                                         <label for="task_status_select">Status </label>
-
-                                        <select id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
+                                        <select class="form-control black-form-control" id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
                                             {% if task.status == "todo" %}
-                                                <option value="uncompleted" selected>Uncompleted</option>
-                                                <option value="completed">Completed</option>
+                                                <option value="uncompleted" selected >Uncompleted</option>
+                                                <option value="completed" >Completed</option>
                                                 <option value="blocked">Blocked</option>
                                             {% elif task.status == "completed" %}
                                                 <option value="uncompleted">Uncompleted</option>
@@ -131,12 +130,15 @@ user.type=='PROJECT_MANAGER' %}
                                             {% endif %}
                                         </select>
                                     </div>
+                                    </div>
+
+                               <div class="form-group">
 
                                    <div class="open_task_priority">
-                                   {{ task.priority }}
+
                                         <label for="task_priority_select">Priority </label>
 
-                                        <select id="task_priority_select" onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})">
+                                        <select class="form-control black-form-control" id="task_priority_select" onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})">
                                             {% if task.priority == "low" %}
                                                 <option value="low" selected>Low</option>
                                                 <option value="medium">Medium</option>
@@ -152,20 +154,30 @@ user.type=='PROJECT_MANAGER' %}
                                             {% endif %}
                                         </select>
                                     </div>
-                                   <div>
-                                       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_share_task_{{ task.id }}">
-                                                Share
-                                        </button>
-                                       <div>
+                               </div>
+
+                                       <div class="form-group">
                                            Devs on this task :
                                        </div>
-                                            <div id="dev_list">
-                                                <ul class="list-group"> <!-- Added ul tag to enclose list items -->
+
+                                        <div class="form-group">
+                                               <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_share_task_{{ task.id }}">
+                                                        Share
+                                               </button>
+                                       </div>
+                                                <ul class="list-group" > <!-- Added ul tag to enclose list items -->
                                                     {% for user_record in user_task_records %}
                                                         {%  if task in user_record.tasks %}
-                                                            <li class="list-group-item">
-                                                                {{ user_record.first_name }}
-                                                                <button class="btn-close" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+                                                            <li class="list-of-devs" >
+                                                            <div class="dev-item ">
+                                                                 {{ user_record.first_name }}
+                                                                <button class="btn-close close-delete-dev" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+
+                                                            </div>
+
+
+
+
                                                             </li>
                                                         {%  endif %}
 
@@ -174,22 +186,18 @@ user.type=='PROJECT_MANAGER' %}
 
                                                 </ul>
 
-                                        </div>
 
-
-
-
-                                   </div>
 
                                 </div>
-
                             </div>
+
+
                         </div>
                     </div>
 
               <div class="modal fade" id="modal_share_task_{{ task.id }}">
                         <div class="modal-dialog">
-                            <div class="modal-content">
+                            <div class="modal-content black-modal">
                                 <div class="modal-header">
                                     <h5 class="modal-title">
                                         Add developers

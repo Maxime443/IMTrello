@@ -24,7 +24,8 @@ body{
     display: flex;
     flex-direction: column;
     width: 100%;
-    height:100%
+    height:100%;
+    background-color: #2e2e2e;
 }
 
 .navbar {
@@ -65,14 +66,30 @@ body{
     vertical-align: top;
 }
 
-li{
+li {
     list-style-type: none;
     display: flex;
     flex-direction: column;
     row-gap: 8px;
     scroll-margin: 80px;
     padding-bottom: 8px;
+    margin-bottom: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+
 }
+
+.list-of-devs{
+    padding: 0px;
+    margin: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+    background-color: #1d306b;
+    border-radius: 10px;
+}
+
+.dev-item{
+    margin: 10px;
+}
+
 
 .task {
     background-color: var(--ds-surface-raised, #7b7b7b);
@@ -170,6 +187,11 @@ li{
     color:var(--text-box);
 }
 
+h1{
+    margin: 10px;
+    color: white;
+}
+
 h134 {
   color: black;
 }
@@ -183,4 +205,44 @@ h135 {
 
 .card-body{
     padding: 16px 12px;
+}
+
+.close-delete-dev {
+    position: absolute;
+    right: 30px;
+
+
+}
+
+.close-delete-task {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.close-task {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.close-delete-section {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.task-modal-project-manager {
+
+}
+
+.black-modal{
+    background-color: #101204;
+}
+
+.black-form-control{
+    background-color: #121243;
+    border-radius: 10px;
+    color: #a3aec3;
+    border-color: #1d306b;
 }
