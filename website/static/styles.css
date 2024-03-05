@@ -2,7 +2,7 @@
     --tr-background-list: #212121;
     --ds-text: #B6C2CF;
     --ds-surface-raised: #000000;
-    --ds-surface-raised_2: #0083d5;
+    --ds-surface-raised_2: #004f7c;
     --text-box:var(--ds-text, #172b4d);
 }
 
@@ -190,7 +190,7 @@ li {
     padding: 5px 5px 0;
     margin: 5px 5px 0;
     margin-left: 80px;
-    border: 2px solid #ffffff;
+
     outline: none;
     color:var(--text-box);
 }
@@ -204,6 +204,9 @@ h134 {
   color: black;
 }
 h135 {
+  color: #949494;
+}
+h136 {
   color: #ffffff;
 }
 
@@ -301,4 +304,57 @@ h135 {
     height: auto; /* Adjust height as needed */
     margin-top: 0px; /* Adjust margin-top as needed */
     margin-right: 8px; /* Adjust margin-right as needed */
+}
+
+.modal-task-dev{
+    background-color: #202020;
+    color: white;
+}
+
+.new_comment{
+    margin: 10px;
+    border-radius: 5px;
+    padding-left: 10px;
+    border-width: 0;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.submit-comment{
+
+    margin: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-width: 0;
+    background-color: #1f3fb1;
+    color: white;
+
+}
+.delete-bitch {
+    display: flex;
+    padding: 10px;
+
+}
+
+.btn-danger {
+    /* Optionally, you can add styles to the danger button */
+    /* For aligning the button to the right within delete-bitch div */
+    margin-left: auto;
+
+}
+
+.icon-container{
+    display: flex;
+    padding: 10px;
+    align-items: end;
+}
+
+.status-icons{
+
+    position: absolute;
+    right: 16px;
+    top: 10px;
 }
