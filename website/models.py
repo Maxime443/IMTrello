@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(120))
     projects = db.relationship('Project',secondary=user_project, backref='users')
     tasks=db.relationship('Task',secondary=user_task, backref='users')
+    experience=db.Column(db.String(), nullable=False)
     type = db.Column(db.String(), nullable=False)
 
 
