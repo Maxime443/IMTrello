@@ -44,6 +44,7 @@ def sign_up():
         password2 = request.form.get('password2')
         type = request.form.get('user_type')
         user = User.query.filter_by(email=email).first()
+        user_experience = request.form.get('user_experience')
         if user:
             flash('Email already exists.', category='error')
         elif len(email) < 4:
@@ -56,7 +57,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'), type=type)
+                password1, method='sha256'), type=type,experience=user_experience)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

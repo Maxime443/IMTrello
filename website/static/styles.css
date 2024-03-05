@@ -1,7 +1,8 @@
 :root {
-    --tr-background-list: #101204;
+    --tr-background-list: #212121;
     --ds-text: #B6C2CF;
-    --ds-surface-raised: #22272B;
+    --ds-surface-raised: #000000;
+    --ds-surface-raised_2: #0083d5;
     --text-box:var(--ds-text, #172b4d);
 }
 
@@ -23,7 +24,8 @@ body{
     display: flex;
     flex-direction: column;
     width: 100%;
-    height:100%
+    height:100%;
+    background-color: #151515;
 }
 
 .navbar {
@@ -31,11 +33,14 @@ body{
     top: 0;
     left: 0;
     width: 100%;
-    height:48px;
-    background-color: #333;
-    padding: 0px 10px;
+    height:60px;
+    background-color: #242424;
+    padding: 10px 20px;
     z-index: 100;
+
 }
+
+
 
 #sections{
     display: flex;
@@ -64,21 +69,40 @@ body{
     vertical-align: top;
 }
 
-li{
+li {
     list-style-type: none;
     display: flex;
     flex-direction: column;
     row-gap: 8px;
     scroll-margin: 80px;
     padding-bottom: 8px;
+    margin-bottom: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+
 }
 
-.task{
-    background-color: var(--ds-surface-raised, #ffffff);
+.list-of-devs{
+    padding: 0px;
+    margin: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+    background-color: #1d306b;
+    border-radius: 10px;
+}
+
+.dev-item{
+    margin: 10px;
+}
+
+
+.task {
+    background-color: var(--ds-surface-raised, #7b7b7b);
     border-radius: 8px;
+    border-color: #4e4e4e; /* Change border color to white */
+    border-style: solid; /* Add border style */
+    border-width: 2px;
     color: var(--text-box);
-    min-height:36px;
-    display:flex;
+    min-height: 36px;
+    display: flex;
     align-items: center;
     position: relative;
     padding: 6px 12px 6px;
@@ -101,6 +125,7 @@ li{
 .section{
     padding: 0 6px;
     height: 100%;
+
 }
 
 .card_footer{
@@ -145,10 +170,135 @@ li{
     margin: 24px 187px 0;
 }
 
+.card{
+    background-color: #393939;
+}
+
+.comment_card{
+    background-color: var(--ds-surface-raised, #1fafb1);
+    border-radius: 8px;
+    padding: 5px 5px 0;
+    margin: 5px 5px 0;
+    margin-right: 80px;
+    border: 2px solid #ffffff;
+    outline: none;
+    color:var(--text-box);
+}
+.comment_card_mine{
+    background-color: var(--ds-surface-raised_2 ,#1f3fb1);
+    border-radius: 8px;
+    padding: 5px 5px 0;
+    margin: 5px 5px 0;
+    margin-left: 80px;
+    border: 2px solid #ffffff;
+    outline: none;
+    color:var(--text-box);
+}
+
+h1{
+    margin: 10px;
+    color: white;
+}
+
+h134 {
+  color: black;
+}
+h135 {
+  color: #ffffff;
+}
+
 .description{
     margin-top:10px;
 }
 
 .card-body{
     padding: 16px 12px;
+}
+
+.close-delete-dev {
+    position: absolute;
+    right: 30px;
+
+
+}
+
+.close-delete-task {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.close-task {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.close-delete-section {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: white;
+}
+
+.task-modal-project-manager {
+    background-color: #464646;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+}
+
+.black-modal{
+    background-color: #191919;
+}
+
+.black-form-control{
+    background-color: #2f2f2f;
+    border-radius: 10px;
+    color: #a3aec3;
+    border-width: 0px;
+
+}
+
+.white_back{
+    background-color: #ffffff;
+    border-radius: 10px;
+    color: #a3aec3;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+
+    padding: 20px;
+    margin-top: 20px;
+    align-content: center;
+}
+
+.project-style{
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+    color: #a3aec3;
+    margin: 40px;
+}
+
+.share-task-to-devs-modal{
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+    color: #ffffff;
+    background: #5d5d5d;
+}
+
+.share-task-to-devs{
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+    color: #5c5c5c;
+    background: #ffffff;
+}
+
+.navbar-logo {
+
+    top: 0;
+    left: 0;
+    width: 40px; /* Adjust width as needed */
+    height: auto; /* Adjust height as needed */
+    margin-top: 0px; /* Adjust margin-top as needed */
+    margin-right: 8px; /* Adjust margin-right as needed */
 }

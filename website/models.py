@@ -13,6 +13,8 @@ user_project=db.Table('user_project',
 user_task=db.Table('user_task',
                    db.Column('user_id',db.Integer,db.ForeignKey('user.id')),
                    db.Column('task_id',db.Integer,db.ForeignKey('task.id')))
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
@@ -20,7 +22,9 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(120))
     projects = db.relationship('Project',secondary=user_project, backref='users')
     tasks=db.relationship('Task',secondary=user_task, backref='users')
+    experience=db.Column(db.String(), nullable=False)
     type = db.Column(db.String(), nullable=False)
+
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,3 +49,19 @@ class Task(db.Model):
     description = db.Column(db.String(10000))
     status = db.Column(db.String(10000))
     priority = db.Column(db.String(10000))
+    chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'))
+
+
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    comments = db.relationship('Comment',backref='chat')
+
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    chat_id = db.Column(db.Integer, db.ForeignKey('chat.id'))
+    content = db.Column(db.String(10000))
+    creation_date = db.Column(db.DateTime(timezone=True))
+

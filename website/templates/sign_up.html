@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
 content %}
-<div class="container">
+<div class="container white_back">
 <form method="POST">
   <h3 align="center">Sign Up</h3>
   <div class="form-group">
@@ -49,6 +49,15 @@ content %}
       <option value="">Select current role</option>
       <option value="PROJECT_MANAGER">Project Manager</option>
       <option value="DEVELOPER">Developer</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="user_experience">What is your experience?</label>
+    <select id="user_experience" name="user_experience" class="form-control">
+      <option value="">Select experience</option>
+      <option value="BEGINNER">Beginner</option>
+      <option value="INTERMEDIATE">Intermediate</option>
+      <option value="COMFIRMED">Comfirmed</option>
     </select>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
