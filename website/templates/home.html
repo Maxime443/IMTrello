@@ -9,22 +9,35 @@
     You are a developer
     {% endif %}
 </h1>
-<ul class="list-group  project-style" id="notes">
-  {% for project in user.projects %}
-  <li class="list-group-item ">
-    {{ project.name }}
-    <button type="button" class="btn btn-primary" onClick="open_Project({{ project.id }})">
-        Open
-    </button>
-    <button type="button" class="btn btn-primary" onclick="showModal({{ project.id }})">
-        Rename
-    </button>
-    <button type="button" class="close" onClick="delete_Project({{ project.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
-</ul>
+<div class="main-container container">
+    <div class="content-block shadow-lg p-3 mb-5 bg-black rounded">
+        <div class="content-text">
+            <h2>IMTRELLO</h2>
+            <p>Boost productivity, enhance collaboration, and conquer your goals with TaskMaster by your side.</p>
+            <button data-bs-toggle="modal" data-bs-target="#modal1" class="btn btn-outline-warning">New Project</button>
+        </div>
+    </div>
+
+</div>
+<div class="tiles">
+   {% for project in user.projects %}
+   <article class="tile">
+    <div class="tile-header">
+        <i class="ph-lightning-light"></i>
+        <h3>
+            <span>{{project.name}}</span>
+        </h3>
+    </div>
+    <a href=" project/{{project.id}}" >
+        <span>Go to project</span>
+        <span class="icon-button">
+            <i class="ph-caret-right-bold"></i>
+        </span>
+    </a>
+</article>
+   {%endfor%}
+  
+   </div>
 <div class="modal fade" id="modal_rename_project">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -51,7 +64,6 @@
         </div>
     </div>
 </div>
-
     <script>
         function showModal(projectId) {
             // Set the value of the hidden input field with the project ID

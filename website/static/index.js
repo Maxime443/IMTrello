@@ -270,7 +270,6 @@ function updateTaskPriority (task_id, value, projectId) {
 document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.getElementById('search-input');
   const tasks = document.querySelectorAll('.task-card');
-  console.log(tasks);
   searchInput.addEventListener('input', function () {
     const searchTerm = searchInput.value.trim().toLowerCase();
 
@@ -301,3 +300,25 @@ function remove_dev_from_task(user_id, task_id, project_id) {
   });
   }
 
+  $(document).ready(function(){      
+    var down = false;
+    
+    $('#bell').click(function(e){
+      
+        var color = $(this).text();
+        if(down){
+            
+            $('#box').css('height','0px');
+            $('#box').css('opacity','0');
+            down = false;
+        }else{
+            
+            $('#box').css('height','auto');
+            $('#box').css('opacity','1');
+            down = true;
+            
+        }
+        
+    });
+        
+        });
