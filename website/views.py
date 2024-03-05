@@ -56,6 +56,7 @@ def delete_project():
 @views.route('/project/<project_id>', methods=['GET', 'POST'])
 def project(project_id):
     project = Project.query.get(project_id)
+    sections = project.sections
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     user_task_records = developers
@@ -78,6 +79,7 @@ def project(project_id):
             db.session.commit()
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
                                    user_task_records=user_task_records,comments=comments)
+                                   user_task_records=user_task_records,sections=sections)
 
         elif action == 'add_task':
             name = request.form.get('task_name')
@@ -149,12 +151,15 @@ def project(project_id):
             return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
                                    user_task_records=user_task_records, comments=comments)
 
+                                   user_task_records=user_task_records,sections=sections)
 
         else:
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
                            user_task_records=user_task_records,comments=comments)
+                           user_task_records=user_task_records,sections=sections)
     return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
                            user_task_records=user_task_records,comments=comments)
+                           user_task_records=user_task_records,sections=sections)
 
 @views.route('/delete-section', methods=['POST'])
 def delete_section():
