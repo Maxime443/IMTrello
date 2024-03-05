@@ -1,7 +1,7 @@
 :root {
     --tr-background-list: #101204;
     --ds-text: #B6C2CF;
-    --ds-surface-raised: #d4d4d4;
+    --ds-surface-raised: #000000;
     --ds-surface-raised_2: #0083d5;
     --text-box:var(--ds-text, #172b4d);
 }
@@ -74,12 +74,15 @@ li{
     padding-bottom: 8px;
 }
 
-.task{
-    background-color: var(--ds-surface-raised, #ffffff);
+.task {
+    background-color: var(--ds-surface-raised, #7b7b7b);
     border-radius: 8px;
+    border-color: #4e4e4e; /* Change border color to white */
+    border-style: solid; /* Add border style */
+    border-width: 2px;
     color: var(--text-box);
-    min-height:36px;
-    display:flex;
+    min-height: 36px;
+    display: flex;
     align-items: center;
     position: relative;
     padding: 6px 12px 6px;

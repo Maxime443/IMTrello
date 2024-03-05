@@ -78,8 +78,8 @@ def project(project_id):
                 developer.projects.append(Project.query.get(project_id))
             db.session.commit()
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                                   user_task_records=user_task_records,comments=comments)
-                                   user_task_records=user_task_records,sections=sections)
+                                   user_task_records=user_task_records,comments=comments,sections=sections)
+
 
         elif action == 'add_task':
             name = request.form.get('task_name')
@@ -149,17 +149,13 @@ def project(project_id):
             comments.append(new_comment)
             flash('New Comment: ' + new_comment_content, category='success')
             return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
-                                   user_task_records=user_task_records, comments=comments)
-
-                                   user_task_records=user_task_records,sections=sections)
+                                   user_task_records=user_task_records, comments=comments,sections=sections)
 
         else:
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                           user_task_records=user_task_records,comments=comments)
-                           user_task_records=user_task_records,sections=sections)
+                           user_task_records=user_task_records,comments=comments,sections=sections)
     return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                           user_task_records=user_task_records,comments=comments)
-                           user_task_records=user_task_records,sections=sections)
+                           user_task_records=user_task_records,comments=comments,sections=sections)
 
 @views.route('/delete-section', methods=['POST'])
 def delete_section():
