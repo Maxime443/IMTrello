@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint, jsonify
 from flask_login import login_required, current_user
-from .models import Project, User, Section, Task
+from .models import Project, User, Section, Task, Chat, Comment
 from . import db
 import json
 
@@ -59,6 +59,7 @@ def project(project_id):
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     user_task_records = developers
+    comments = Comment.query.all()
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'add_section':
@@ -76,14 +77,17 @@ def project(project_id):
                 developer.projects.append(Project.query.get(project_id))
             db.session.commit()
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                                   user_task_records=user_task_records)
+                                   user_task_records=user_task_records,comments=comments)
 
         elif action == 'add_task':
             name = request.form.get('task_name')
             section_id = request.form.get('task_section_id')
             print(section_id)
             description = request.form.get('task_description')
+
             new_task = Task(name="Task " + name, section_id=section_id, description=description, status='uncompleted', priority='medium')
+            new_chat = Chat(task_id=new_task.id)
+            new_task.chat_id = new_chat.id
             db.session.add(new_task)
             section = Section.query.get(section_id)
             section.tasks.append(new_task)
@@ -112,17 +116,45 @@ def project(project_id):
                     dess += developer.first_name + " "
                     x -= 1
             y = str(x)
-
-
             db.session.commit()
             return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
-                                   user_task_records=user_task_records)
+                                   user_task_records=user_task_records,comments=comments)
+
+        elif action == "submit_comment":
+
+            task_id = request.form.get('task_id')
+            chat_id = request.form.get('chat_id')
+            new_comment_content = request.form.get('new_comment')
+            new_comment_content = '\n'.join(filter(None, (line.strip() for line in new_comment_content.splitlines())))
+
+            # Retrieve the task associated with the comment
+            task = Task.query.get(task_id)
+            # Check if the chat associated with the task exists
+            if not task.chat_id:
+                # Create a new chat if it doesn't exist
+                chat = Chat(task_id=task_id)
+                db.session.add(chat)
+                db.session.commit()
+                task.chat_id = chat.id
+            # Retrieve the chat associated with the task
+            chat = Chat.query.get(task.chat_id)
+            # Create a new comment
+            new_comment = Comment(user_id=current_user.id, chat_id=chat.id, content=new_comment_content,
+                                  creation_date=datetime.now())
+            db.session.add(new_comment)
+            db.session.commit()
+            # Update the comments list with the new comment
+            comments.append(new_comment)
+            flash('New Comment: ' + new_comment_content, category='success')
+            return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
+                                   user_task_records=user_task_records, comments=comments)
+
 
         else:
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                           user_task_records=user_task_records)
+                           user_task_records=user_task_records,comments=comments)
     return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
-                           user_task_records=user_task_records)
+                           user_task_records=user_task_records,comments=comments)
 
 @views.route('/delete-section', methods=['POST'])
 def delete_section():

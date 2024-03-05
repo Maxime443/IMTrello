@@ -1,7 +1,8 @@
 :root {
     --tr-background-list: #101204;
     --ds-text: #B6C2CF;
-    --ds-surface-raised: #22272B;
+    --ds-surface-raised: #d4d4d4;
+    --ds-surface-raised_2: #0083d5;
     --text-box:var(--ds-text, #172b4d);
 }
 
@@ -142,4 +143,32 @@ li{
 
 .taches{
     margin: 24px 187px 0;
+}
+
+.comment_card{
+    background-color: var(--ds-surface-raised, #1fafb1);
+    border-radius: 8px;
+    padding: 5px 5px 0;
+    margin: 5px 5px 0;
+    margin-right: 80px;
+    border: 2px solid #ffffff;
+    outline: none;
+    color:var(--text-box);
+}
+.comment_card_mine{
+    background-color: var(--ds-surface-raised_2 ,#1f3fb1);
+    border-radius: 8px;
+    padding: 5px 5px 0;
+    margin: 5px 5px 0;
+    margin-left: 80px;
+    border: 2px solid #ffffff;
+    outline: none;
+    color:var(--text-box);
+}
+
+h134 {
+  color: black;
+}
+h135 {
+  color: #ffffff;
 }
