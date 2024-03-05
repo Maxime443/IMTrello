@@ -267,6 +267,27 @@ function updateTaskPriority (task_id, value, projectId) {
 
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('search-input');
+  const tasks = document.querySelectorAll('.task-card');
+  console.log(tasks);
+  searchInput.addEventListener('input', function () {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    tasks.forEach(function (task) {
+      const taskName = task.querySelector('.card-title a').textContent.toLowerCase();
+      const taskPriority = task.querySelector('.priority span').textContent.toLowerCase();
+      const taskStatus = task.querySelector('.status span').textContent.toLowerCase();
+      console.log(taskStatus);
+
+      if (taskName.includes(searchTerm) || taskPriority === searchTerm || taskStatus.includes(searchTerm)) {
+        task.style.display = 'block';
+      } else {
+        task.style.display = 'none';
+      }
+    });
+  });
+});
 
 
 

@@ -34,6 +34,7 @@ body{
     height:48px;
     background-color: #333;
     padding: 0px 10px;
+    z-index: 100;
 }
 
 #sections{
@@ -142,4 +143,12 @@ li{
 
 .taches{
     margin: 24px 187px 0;
+}
+
+.description{
+    margin-top:10px;
+}
+
+.card-body{
+    padding: 16px 12px;
 }
