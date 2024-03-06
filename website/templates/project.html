@@ -73,30 +73,36 @@ user.type=='PROJECT_MANAGER' %}
 
 
               </div>
+              </div>
 
 
 
 
 
 
-          <div class="modal fade" id="modal_open_task_{{ task.id }}">
+
+
+          </li>
+
+
+                        <div class="modal fade" id="modal_open_task_{{ task.id }}">
                         <div class="modal-dialog">
-                            <div class="modal-content black-modal">
-                                <div class="modal-header ">
+                            <div class="modal-content">
+                                <div class="modal-header-special ">
 
                                     <h5 id="open_task_title">
                                         {{ task.name }}
                                     </h5>
 
-                                    <button class="btn-close close-task btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button class="btn-close close-task pushed-right" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                               <div class="modal-body task-modal-project-manager">
+                               <div class="modal-body">
 
 
                                     <div class="open_task_status">
                                     <div class="form-group">
                                         <label for="task_status_select">Status </label>
-                                        <select class="form-control black-form-control" id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
+                                        <select class="form-control" id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
                                             {% if task.status == "todo" %}
                                                 <option value="uncompleted" selected >Uncompleted</option>
                                                 <option value="completed" >Completed</option>
@@ -174,14 +180,17 @@ user.type=='PROJECT_MANAGER' %}
                                                 <ul class="list-group" > <!-- Added ul tag to enclose list items -->
                                                     {% for user_record in user_task_records %}
                                                         {%  if task in user_record.tasks %}
-                                                            <li class="list-of-devs" >
-                                                            <div class="dev-item ">
-                                                                 {{ user_record.first_name }}
-                                                                <button class="btn-close close-delete-dev" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+                                                            <li >
+                                                            <div class="list-of-devs">
+                                                                <div class="dev-item-left ">
+                                                                     {{ user_record.first_name }}
 
+                                                                </div>
+                                                                <div class="dev-item-right ">
+                                                                    <button class="btn-close close-delete-dev btn-close-white" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+
+                                                                </div>
                                                             </div>
-
-
 
 
                                                             </li>
@@ -196,18 +205,104 @@ user.type=='PROJECT_MANAGER' %}
                                   >Delete task</button>
                                </div></ul>
 
+                               </div>
+
+
+                            <div class="task-modal-project-manager">
+                               <section class="my-messenger">
+                                  <header class="my-messenger-header">
+                                    <div class="my-messenger-header-title">
+                                      <i class="fas fa-comment-alt"></i> SimpleChat
+                                    </div>
+                                    <div class="my-messenger-header-options">
+                                      <span><i class="fas fa-cog"></i></span>
+                                    </div>
+                                  </header>
+
+                                  <main class="my-messenger-chat">
+
+                                      {% for comment in comments %}
+                                                {% if comment.chat_id == task.chat_id %}
+                                                    {% if comment.user_id == current_user.id %}
+                                                          <div class="msg right-msg">
+                                                              <div
+                                                               class="msg-img"
+                                                               style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
+                                                              ></div>
+
+                                                              <div class="msg-bubble">
+                                                                <div class="msg-info">
+                                                                  <div class="msg-info-name">
+                                                                      {% for user_record in user_task_records %}
+                                                                            {% if user_record.id == comment.user_id %}
+                                                                                {{ user_record.first_name }}
+                                                                            {% endif %}
+                                                                      {% endfor %}</div>
+                                                                  <div class="msg-info-time">
+                                                                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}</div>
+                                                                </div>
+
+
+                                                                <div class="msg-text">
+                                                                    {{ comment.content }}
+                                                                </div>
+                                                              </div>
+                                                        </div>
+                                                    {% else %}
+                                                          <div class="msg left-msg">
+                                                              <div
+                                                               class="msg-img"
+                                                               style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                                                              ></div>
+
+                                                              <div class="msg-bubble">
+                                                                <div class="msg-info">
+                                                                  <div class="msg-info-name">
+                                                                      {% for user_record in user_task_records %}
+                                                                            {% if user_record.id == comment.user_id %}
+                                                                                {{ user_record.first_name }}
+                                                                            {% endif %}
+                                                                      {% endfor %}
+                                                                  </div>
+                                                                  <div class="msg-info-time">{{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                                                                  </div>
+                                                                </div>
+
+                                                                <div class="msg-text">
+                                                                    {{ comment.content}}
+                                                                </div>
+                                                              </div>
+                                                            </div>
+
+                                                    {% endif %}
+                                               {% endif %}
+                                      {% endfor %}
+                                  </main>
+
+                                          <form class="my-messenger-input-area" method="POST" action="/project/{{ project.id }}">
+                                                <input type="hidden" name="action" value="submit_comment">
+                                                <input type="hidden" name="task_id" value="{{ task.id }}">
+                                                <input type="hidden" name="chat_id" value="{{ task.chat_id }}">
+                                                <label >
+                                                    <input type="text" class="my-messenger-input" name="new_comment"  placeholder="Enter your message..."></input>
+                                                </label>
+                                                <button type="submit" class="my-messenger-send-btn">Send</button>
+                                            </form>
+
+
+                                </section>
+                            </div>
 
 
 
-                                </div>
+
+
                             </div>
 
 
                         </div>
-                    </div>
 
-
-          </li>
+           </div>
           {% endfor %}
         </ol>
       </div>
@@ -367,9 +462,9 @@ user.type=='PROJECT_MANAGER' %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4">
-      <div class="">
+      <div class="black-me">
         <div
-          class="card-header h-100 border-0 rounded-3 shadow text-decoration-none"
+          class="card-header"
         >
           <div class="card-body justify-content-center align-items-center">
             <div
@@ -396,9 +491,9 @@ user.type=='PROJECT_MANAGER' %}
       </div>
     </div>
     <div class="col-md-4">
-      <div class="">
+      <div class="black-me">
         <div
-          class="card-header h-100 border-0 rounded-3 shadow text-decoration-none"
+          class="card-header"
         >
           <div class="card-body justify-content-center align-items-center">
             <div
@@ -425,8 +520,8 @@ user.type=='PROJECT_MANAGER' %}
       </div>
     </div>
     <div class="col-md-4">
-      <div class="">
-        <div class="card-header h-100 border-0 rounded-3 shadow">
+      <div class="black-me">
+        <div class="card-header ">
           <div class="card-body justify-content-center align-items-center">
             <div
               class="w-100 d-flex justify-content-between align-items-center"
@@ -468,7 +563,7 @@ user.type=='PROJECT_MANAGER' %}
     </div>
   </div>
   {% for task in user.tasks %}
-  <div class="task-card rounded-3 h-100 shadow mb-4 border-0 py-3">
+  <div class="task-card rounded-3 h-100 mb-4 border-0 py-3 black-me">
     <div class="card-body pb-0">
       <div class="row">
         <div class="col-12 col-md-8">
@@ -547,7 +642,8 @@ user.type=='PROJECT_MANAGER' %}
               <i class="bi bi-x-circle fs-6 text-danger"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1">
+            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" data-bs-toggle="modal"
+  data-bs-target="#modal_open_task_dev_{{ task.id }}">
               <i class="bi bi-chat fs-6 text-primary"></i></button
           ></span>
           <span>
@@ -569,65 +665,92 @@ user.type=='PROJECT_MANAGER' %}
                                     </h5>
                                     <button class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                               <div class="modal-body">
-                                    <div class="card">
-                                        <div class="comment-list">
-                                            {% for comment in comments %}
+                               <div class="modal-body-special">
+
+
+                                   <section class="my-messenger">
+                                  <header class="my-messenger-header">
+                                    <div class="my-messenger-header-title">
+                                      <i class="fas fa-comment-alt"></i> SimpleChat
+                                    </div>
+                                    <div class="my-messenger-header-options">
+                                      <span><i class="fas fa-cog"></i></span>
+                                    </div>
+                                  </header>
+
+                                  <main class="my-messenger-chat">
+
+                                      {% for comment in comments %}
                                                 {% if comment.chat_id == task.chat_id %}
                                                     {% if comment.user_id == current_user.id %}
-                                                        <div class="comment_card_mine">
+                                                          <div class="msg right-msg">
+                                                              <div
+                                                               class="msg-img"
+                                                               style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
+                                                              ></div>
 
-                                                            <div class="user-info">
-                                                                <h135 class="user">
-                                                                    {% for user_record in user_task_records %}
-                                                                        {% if user_record.id == comment.user_id %}
-                                                                            {{ user_record.first_name }}
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </h135>
+                                                              <div class="msg-bubble">
+                                                                <div class="msg-info">
+                                                                  <div class="msg-info-name">
+                                                                      {% for user_record in user_task_records %}
+                                                                            {% if user_record.id == comment.user_id %}
+                                                                                {{ user_record.first_name }}
+                                                                            {% endif %}
+                                                                      {% endfor %}</div>
+                                                                  <div class="msg-info-time">
+                                                                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}</div>
+                                                                </div>
 
-                                                            </div>
-                                                            <h136 class="card_footer">
-                                                                {{ comment.content }}
-                                                            </h136>
-                                                            <h135 class="time">{{ comment.creation_date.strftime('%d/%m/%Y %H:%M') }}</h135>
+
+                                                                <div class="msg-text">
+                                                                    {{ comment.content }}
+                                                                </div>
+                                                              </div>
                                                         </div>
                                                     {% else %}
-                                                        <div class="comment_card">
-                                                            <div class="user-info">
-                                                                <h134 class="user">
-                                                                    {% for user_record in user_task_records %}
-                                                                        {% if user_record.id == comment.user_id %}
-                                                                            {{ user_record.first_name }}
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </h134>
+                                                          <div class="msg left-msg">
+                                                              <div
+                                                               class="msg-img"
+                                                               style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
+                                                              ></div>
 
+                                                              <div class="msg-bubble">
+                                                                <div class="msg-info">
+                                                                  <div class="msg-info-name">
+                                                                      {% for user_record in user_task_records %}
+                                                                            {% if user_record.id == comment.user_id %}
+                                                                                {{ user_record.first_name }}
+                                                                            {% endif %}
+                                                                      {% endfor %}
+                                                                  </div>
+                                                                  <div class="msg-info-time">{{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                                                                  </div>
+                                                                </div>
+
+                                                                <div class="msg-text">
+                                                                    {{ comment.content}}
+                                                                </div>
+                                                              </div>
                                                             </div>
-                                                            <h136 class="card_footer">
-                                                                {{ comment.content }}
-                                                            </h136>
-                                                            <h134 class="time">{{ comment.creation_date.strftime('%d/%m/%Y %H:%M') }}</h134>
-                                                        </div>
+
                                                     {% endif %}
-                                                {% endif %}
+                                               {% endif %}
+                                      {% endfor %}
+                                  </main>
 
-
-
-                                            {% endfor %}
-                                        </div>
-                                        <div class="comment-form">
-                                            <form method="POST" action="/project/{{ project.id }}">
+                                          <form class="my-messenger-input-area" method="POST" action="/project/{{ project.id }}">
                                                 <input type="hidden" name="action" value="submit_comment">
                                                 <input type="hidden" name="task_id" value="{{ task.id }}">
                                                 <input type="hidden" name="chat_id" value="{{ task.chat_id }}">
                                                 <label >
-                                                    <input class="new_comment" name="new_comment"  placeholder="Write your comment here"></input>
+                                                    <input type="text" class="my-messenger-input" name="new_comment"  placeholder="Enter your message..."></input>
                                                 </label>
-                                                <button class="submit-comment" type="submit">Submit</button>
+                                                <button type="submit" class="my-messenger-send-btn">Send</button>
                                             </form>
-                                        </div>
-                                    </div>
+
+
+                                </section>
+
                                 </div>
 
                             </div>
