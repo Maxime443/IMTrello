@@ -87,7 +87,7 @@ user.type=='PROJECT_MANAGER' %}
 
                         <div class="modal fade" id="modal_open_task_{{ task.id }}">
                         <div class="modal-dialog">
-                            <div class="modal-content task-modal-project-manager">
+                            <div class="modal-content">
                                 <div class="modal-header-special ">
 
                                     <h5 id="open_task_title">
@@ -96,7 +96,7 @@ user.type=='PROJECT_MANAGER' %}
 
                                     <button class="btn-close close-task pushed-right" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                               <div class="modal-body task-modal-project-manager">
+                               <div class="modal-body">
 
 
                                     <div class="open_task_status">
@@ -180,14 +180,17 @@ user.type=='PROJECT_MANAGER' %}
                                                 <ul class="list-group" > <!-- Added ul tag to enclose list items -->
                                                     {% for user_record in user_task_records %}
                                                         {%  if task in user_record.tasks %}
-                                                            <li class="list-of-devs" >
-                                                            <div class="dev-item ">
-                                                                 {{ user_record.first_name }}
-                                                                <button class="btn-close close-delete-dev" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+                                                            <li >
+                                                            <div class="list-of-devs">
+                                                                <div class="dev-item-left ">
+                                                                     {{ user_record.first_name }}
 
+                                                                </div>
+                                                                <div class="dev-item-right ">
+                                                                    <button class="btn-close close-delete-dev btn-close-white" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
+
+                                                                </div>
                                                             </div>
-
-
 
 
                                                             </li>
@@ -205,7 +208,7 @@ user.type=='PROJECT_MANAGER' %}
                                </div>
 
 
-
+                            <div class="task-modal-project-manager">
                                <section class="my-messenger">
                                   <header class="my-messenger-header">
                                     <div class="my-messenger-header-title">
@@ -288,6 +291,7 @@ user.type=='PROJECT_MANAGER' %}
 
 
                                 </section>
+                            </div>
 
 
 
