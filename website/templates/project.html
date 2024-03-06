@@ -85,7 +85,40 @@ user.type=='PROJECT_MANAGER' %}
           </li>
 
 
-                        <div class="modal fade" id="modal_open_task_{{ task.id }}">
+
+          {% endfor %}
+        </ol>
+      </div>
+      {% if user.type=='PROJECT_MANAGER' %}
+      <div class="card_footer">
+        <button
+          type="button"
+          class="add-card-btn btn-dark btn"
+          onclick="showModalforNewTask({{ section.id }})"
+        >
+          <i class="fas fa-plus"></i>Add task
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %} {% if user.type=='PROJECT_MANAGER' %}
+  <div class="add_section">
+    <button
+      type="button"
+      class="btn_section btn btn-dark"
+      onclick="createSectionForm()"
+    >
+      <i class="fas fa-plus"></i>New Section
+    </button>
+  </div>
+  {% endif %}
+</ol>
+
+{% for section in project.sections %}
+{% for task in section.tasks %}
+
+<div class="modal fade" id="modal_open_task_{{ task.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header-special ">
@@ -303,34 +336,12 @@ user.type=='PROJECT_MANAGER' %}
                         </div>
 
            </div>
-          {% endfor %}
-        </ol>
-      </div>
-      {% if user.type=='PROJECT_MANAGER' %}
-      <div class="card_footer">
-        <button
-          type="button"
-          class="add-card-btn btn-dark btn"
-          onclick="showModalforNewTask({{ section.id }})"
-        >
-          <i class="fas fa-plus"></i>Add task
-        </button>
-      </div>
-      {% endif %}
-    </div>
-  </li>
-  {% endfor %} {% if user.type=='PROJECT_MANAGER' %}
-  <div class="add_section">
-    <button
-      type="button"
-      class="btn_section btn btn-dark"
-      onclick="createSectionForm()"
-    >
-      <i class="fas fa-plus"></i>New Section
-    </button>
-  </div>
-  {% endif %}
-</ol>
+
+{% endfor %}
+{% endfor %}
+
+
+
 
 {# Modal new_section#}
 <div class="modal fade" id="modal_new_section">
