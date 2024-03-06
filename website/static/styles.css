@@ -140,7 +140,14 @@ li {
     padding: 2px 4px;
 }
 
+.black-me{
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+}
+
 .card_header{
+    background-color: #7b7b7b;
     display: flex;
     padding: 8px 8px 0;
     position: relative;
@@ -198,7 +205,7 @@ li {
 }
 
 .card{
-    background-color: #393939;
+    background-color: #484848;
 }
 
 .comment_card{
@@ -269,6 +276,10 @@ h136 {
 .modal-task-dev{
     background-color: #202020;
     color: white;
+}
+
+.task-card{
+    padding: 10px;
 }
 
 .new_comment{
