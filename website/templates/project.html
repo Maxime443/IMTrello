@@ -85,7 +85,40 @@ user.type=='PROJECT_MANAGER' %}
           </li>
 
 
-                        <div class="modal fade" id="modal_open_task_{{ task.id }}">
+
+          {% endfor %}
+        </ol>
+      </div>
+      {% if user.type=='PROJECT_MANAGER' %}
+      <div class="card_footer">
+        <button
+          type="button"
+          class="add-card-btn btn-dark btn"
+          onclick="showModalforNewTask({{ section.id }})"
+        >
+          <i class="fas fa-plus"></i>Add task
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %} {% if user.type=='PROJECT_MANAGER' %}
+  <div class="add_section">
+    <button
+      type="button"
+      class="btn_section btn btn-dark"
+      onclick="createSectionForm()"
+    >
+      <i class="fas fa-plus"></i>New Section
+    </button>
+  </div>
+  {% endif %}
+</ol>
+
+{% for section in project.sections %}
+{% for task in section.tasks %}
+
+<div class="modal fade" id="modal_open_task_{{ task.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header-special ">
@@ -303,34 +336,12 @@ user.type=='PROJECT_MANAGER' %}
                         </div>
 
            </div>
-          {% endfor %}
-        </ol>
-      </div>
-      {% if user.type=='PROJECT_MANAGER' %}
-      <div class="card_footer">
-        <button
-          type="button"
-          class="add-card-btn btn-dark btn"
-          onclick="showModalforNewTask({{ section.id }})"
-        >
-          <i class="fas fa-plus"></i>Add task
-        </button>
-      </div>
-      {% endif %}
-    </div>
-  </li>
-  {% endfor %} {% if user.type=='PROJECT_MANAGER' %}
-  <div class="add_section">
-    <button
-      type="button"
-      class="btn_section btn btn-dark"
-      onclick="createSectionForm()"
-    >
-      <i class="fas fa-plus"></i>New Section
-    </button>
-  </div>
-  {% endif %}
-</ol>
+
+{% endfor %}
+{% endfor %}
+
+
+
 
 {# Modal new_section#}
 <div class="modal fade" id="modal_new_section">
@@ -552,18 +563,18 @@ user.type=='PROJECT_MANAGER' %}
   <span class="w-100 w-md-50 fw-bolder"><h4 class="mb-4">Tasks</h4></span>
   <div class="row justify-content-center">
     <div class="col-md-6">
-      <div class="input-group mb-3">
+      <div class="input-group">
         <input
           id="search-input"
           placeholder="Search tasks"
           type="text"
-          class="form-control"
+          class="form-control-special"
         />
       </div>
     </div>
   </div>
   {% for task in user.tasks %}
-  <div class="task-card rounded-3 h-100 mb-4 border-0 py-3 black-me">
+  <div class="task-card black-me">
     <div class="card-body pb-0">
       <div class="row">
         <div class="col-12 col-md-8">
