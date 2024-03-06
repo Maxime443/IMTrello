@@ -11,7 +11,7 @@
 .notifications-item .text p{color: #aaa;font-size: 12px}
 
 :root {
-    --tr-background-list: #212121;
+    --tr-background-list: #0f0f0f;
     --ds-text: #B6C2CF;
     --ds-surface-raised: #000000;
     --ds-surface-raised_2: #004f7c;
@@ -147,9 +147,9 @@ li {
 }
 
 .card_header{
-    background-color: #7b7b7b;
+    background-color: #272727;
     display: flex;
-    padding: 8px 8px 0;
+    padding: 10px;
     position: relative;
     justify-content: space-between;
     align-items: flex-start;
@@ -159,6 +159,7 @@ li {
 .section{
     padding: 0 6px;
     height: 100%;
+
 
 }
 
@@ -244,6 +245,11 @@ h136 {
   color: #ffffff;
 }
 
+
+.card-content{
+    background-color: #1c1c1c;
+}
+
 .description{
     margin-top:10px;
 }
@@ -263,11 +269,24 @@ h136 {
     color:#B6C2CF
 }
 
+.logo-title{
+    width: 50%;
+}
+
+master{
+    padding: 20px;
+    width: 150px;
+}
+
+.logo-icon{
+
+}
+
 .navbar-logo {
 
     top: 0;
     left: 0;
-    width: 40px; /* Adjust width as needed */
+     /* Adjust width as needed */
     height: auto; /* Adjust height as needed */
     margin-top: 0px; /* Adjust margin-top as needed */
     margin-right: 8px; /* Adjust margin-right as needed */
