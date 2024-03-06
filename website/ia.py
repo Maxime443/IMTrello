@@ -1,4 +1,5 @@
 from gpt4all import GPT4All
+import requests
 
 def estim_tache(experiences,desc_tache):
     #experiences : liste des experiences des developpeurs du projet
@@ -41,3 +42,36 @@ def avancement_projet(taches_projet):
             en_cours+=estim_tache(t[0],t[1])
     return en_cours/temps_estime
 
+
+
+
+def get_all_repository_commits(proprietaire_repository, nom_repository):
+    #proprietaire_repository : pseudo du proprietaire du repository
+    #nom_repository : nom du repository où l'on souhaite obtenir les messages des commit
+    #IMPORTANT : on suppose que les messages des commit sont sous la forme "username; nom_tache, commit_message"
+    #où username est le nom du développeur qui effectue le commit
+
+
+    api_url = f'https://api.github.com/repos/{proprietaire_repository}/{nom_repository}/commits'
+    all_commit_messages = []
+
+    while api_url:
+        response = requests.get(api_url)
+        
+        if response.status_code == 200:
+            commits = response.json()
+            commit_messages = [commit['commit']['message'] for commit in commits]
+            all_commit_messages.extend(commit_messages)
+            api_url = response.links.get('next', {}).get('url') #aller à toutes les pages de commit
+        else:
+            print(f"Échec de la requête ({response.status_code}): {response.text}")
+            return None
+
+    return all_commit_messages
+
+
+username = 'Kayus54'
+repository = 'CACAO-2023'
+
+commit_messages = get_all_repository_commits(username, repository)
+print(commit_messages)
