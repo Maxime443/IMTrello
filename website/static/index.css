@@ -64,7 +64,7 @@ a {
 .app {
 	min-height: 80vh;
 	width: 98%;
-	margin-bottom: 20px;
+	
 
 	background: linear-gradient(180deg, #010314,#010314,#010314, #010314,#0c082c, #261463, #4925b0, #6d3dee, #8d67f2, #ad92f6);
 	border-bottom-right-radius: 100px;
@@ -179,7 +179,7 @@ a {
 	display: flex;
 	align-items: center;
 	padding-bottom: 1rem;
-	padding-top: 1rem;
+	padding-top: 0rem;
 	margin:0;
 	border-bottom: 1px solid var(--c-gray-600);
 	@media (max-width: 1200px) {

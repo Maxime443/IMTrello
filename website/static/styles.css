@@ -288,8 +288,9 @@ h136 {
 }
 
 master{
-    padding: 20px;
-    width: 150px;
+    padding: 0px 20px;
+    width: 130px;
+
 }
 
 .logo-icon{
