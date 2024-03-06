@@ -21,7 +21,7 @@
 </div>
 <div class="tiles">
    {% for project in user.projects %}
-   <article class="tile">
+   <article class="tile-special">
     <div class="tile-header">
         <i class="ph-lightning-light"></i>
         <h3>
@@ -29,7 +29,7 @@
         </h3>
     </div>
     <a href=" project/{{project.id}}" >
-        <span>Go to project</span>
+
         <span class="icon-button">
             <i class="ph-caret-right-bold"></i>
         </span>

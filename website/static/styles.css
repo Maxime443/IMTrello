@@ -76,7 +76,14 @@ html{
     flex-direction: column;
     color: var(--text-box);
     border-radius: 12px;
-    background-color:  var(--tr-background-list, #B6C2CF);
+
+    background: linear-gradient(150deg,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(107, 52, 255));
+    backdrop-filter: blur(10px);
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.43);
+
     padding-bottom: 8px;
     position: relative;
     scroll-margin: 8px;
@@ -141,13 +148,19 @@ li {
 }
 
 .black-me{
-    background-color: #2a2a2a;
-    border-radius: 10px;
+    background: linear-gradient(150deg,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(107, 52, 255));
+    backdrop-filter: blur(10px);
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.43);
+
     box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
 .card_header{
-    background-color: #272727;
+    background-color: rgba(39, 39, 39, 0);
     display: flex;
     padding: 10px;
     position: relative;
@@ -299,6 +312,7 @@ master{
 
 .task-card{
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 .new_comment{
@@ -327,6 +341,31 @@ master{
     display: flex;
     padding: 10px;
 
+}
+
+.tile-special{
+
+    border-radius: 20px;
+    height: 140px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    background: linear-gradient(150deg,rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(107, 52, 255));
+    backdrop-filter: blur(10px);
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.43);
+
+}
+
+
+
+.icon-button{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 
 .btn-danger {
@@ -513,4 +552,36 @@ master{
 .task-modal-project-manager{
     align-items: center;
 }
+
+.form-control-special{
+    border-radius: 10px;
+
+    background: linear-gradient(150deg, rgb(107, 52, 255), rgb(107, 52, 255), rgb(107, 52, 255));
+    backdrop-filter: blur(10px);
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.43);
+    width: 100%;
+    padding: 10px;
+    color: white;
+
+}
+
+.form-control-special::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Adjust the opacity and color as needed */
+
+}
+
+
+
+.input-group{
+    align-items: center;
+    margin: 20px;
+
+    display: flex;
+    justify-content: center; /* Center the card horizontally */
+
+}
+
 
