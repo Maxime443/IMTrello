@@ -189,7 +189,7 @@ def delete_task():
     return jsonify({})
 
 
-@views.route('/remove-dev', methods=['POST'])
+@views.route('/remove-dev', methods=['POST']) # FROM TASK IMPLICITE
 def remove_dev():
     res = json.loads(request.data)  # Use request.get_json() to parse JSON data
     task_id = res['task_id']  # Access task_id from the JSON data
@@ -204,6 +204,20 @@ def remove_dev():
         db.session.commit()
     return jsonify({})
 
+@views.route('/remove-dev-from-project', methods=['POST'])
+def remove_dev_from_project():
+    res = json.loads(request.data)  # Use request.get_json() to parse JSON data
+     # Access task_id from the JSON data
+    user_id = res['user_id']  # Access user from the JSON data
+    project_id = res['project_id']
+    # Assuming db is the SQLAlchemy database object
+    user = User.query.get(user_id)
+    projecto = Project.query.get(project_id)
+    if projecto in user.projects:
+        # Assuming db is the SQLAlchemy database object
+        user.projects.remove(projecto)  # Use remove() to remove task from user's tasks
+        db.session.commit()
+    return jsonify({})
 
 @views.route('/get-task-infos/<int:task_id>', methods=['GET'])
 def get_task(task_id):

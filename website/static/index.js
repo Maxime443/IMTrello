@@ -313,6 +313,15 @@ function remove_dev_from_task(user_id, task_id, project_id) {
   });
   }
 
+  function remove_dev_from_project(user_id, project_id) {
+  fetch("/remove-dev-from-project", {
+    method: "POST",
+    body: JSON.stringify({ user_id : user_id ,project_id : project_id }),
+  }).then((_res) => {
+    window.location.href = "/project/" + project_id;
+  });
+  }
+
   $(document).ready(function(){      
     var down = false;
     

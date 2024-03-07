@@ -92,22 +92,22 @@ user.type=='PROJECT_MANAGER' %}
 
 <div class="modal fade" id="modal_open_task_{{ task.id }}">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content black-me">
       <div class="modal-header-special">
         <h5 id="open_task_title">{{ task.name }}</h5>
 
         <button
-          class="btn-close close-task pushed-right"
+          class="btn-close close-task pushed-right btn-close-white"
           data-bs-dismiss="modal"
           aria-label="Close"
         ></button>
       </div>
       <div class="modal-body">
-        <div class="open_task_status">
-          <div class="form-group">
+        <div class="open_task_status ">
+          <div class="form-group-special">
             <label for="task_status_select">Status </label>
             <select
-              class="form-control"
+              class="form-control-special"
               id="task_status_select"
               onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})"
             >
@@ -132,12 +132,12 @@ user.type=='PROJECT_MANAGER' %}
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group-special">
           <div class="open_task_priority">
             <label for="task_priority_select">Priority </label>
 
             <select
-              class="form-control black-form-control"
+              class="form-control-special"
               id="task_priority_select"
               onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})"
             >
@@ -158,9 +158,9 @@ user.type=='PROJECT_MANAGER' %}
           </div>
         </div>
 
-        <div class="form-group">Devs on this task :</div>
 
-        <div class="form-group">
+
+
           <form method="POST" action="/project/{{ project.id }}">
             <input type="hidden" name="action" value="add_developer_to_task" />
             <input
@@ -169,9 +169,10 @@ user.type=='PROJECT_MANAGER' %}
               name="task_id"
               value="{{ task.id }}"
             />
-            <div class="modal-body">
-              <label for="name">Share to</label>
-              <div class="form-group share-task-to-devs">
+
+
+              <div class="form-group">
+              <div class="dev-organisation">
                 <select
                   id="developer_emails_for_task_{{ task.id }}"
                   name="developer_emails_for_task"
@@ -179,21 +180,27 @@ user.type=='PROJECT_MANAGER' %}
                   multiple="multiple"
                 >
                   {% for user in user_task_records %} {% if task not in
-                  user.tasks %}
+                  user.tasks and project in user.projects %}
                   <option value="{{ user.email }}">{{ user.email }}</option>
                   {% endif %} {% endfor %}
                 </select>
               </div>
+              </div>
               <button type="submit" class="btn btn-primary">Add</button>
-            </div>
+
           </form>
-        </div>
+
+
+
         <ul class="list-group">
           <!-- Added ul tag to enclose list items -->
           {% for user_record in user_task_records %} {% if task in
-          user_record.tasks %}
+          user_record.tasks and project in user_record.projects %}
+              <div class="dev-organisation">
+          <div>
+
           <li>
-            <div class="list-of-devs">
+            <div class="list-of-devs black-me">
               <div class="dev-item-left">{{ user_record.first_name }}</div>
               <div class="dev-item-right">
                 <button
@@ -205,6 +212,8 @@ user.type=='PROJECT_MANAGER' %}
               </div>
             </div>
           </li>
+              </div>
+              </div>
           {% endif %} {% endfor %}
           <div class="form-group delete-bitch">
             <button
@@ -218,9 +227,9 @@ user.type=='PROJECT_MANAGER' %}
         </ul>
       </div>
 
-      <div class="task-modal-project-manager">
-        <section class="my-messenger">
-          <header class="my-messenger-header">
+      <div class="task-modal-project-manager ">
+        <section class="my-messenger ">
+          <header class="my-messenger-header ">
             <div class="my-messenger-header-title">
               <i class="fas fa-comment-alt"></i> SimpleChat
             </div>
@@ -310,7 +319,7 @@ user.type=='PROJECT_MANAGER' %}
 {% endfor %} {% endfor %} {# Modal new_section#}
 <div class="modal fade" id="modal_new_section">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content black-me">
       <div class="modal-header">
         <h5 class="modal-title">New Section</h5>
         <button
@@ -344,7 +353,7 @@ user.type=='PROJECT_MANAGER' %}
 {# Modal for sharing to devs #}
 <div class="modal fade" id="modal_share">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content black-me">
       <div class="modal-header">
         <h5 class="modal-title">Add developers</h5>
         <button
@@ -365,8 +374,10 @@ user.type=='PROJECT_MANAGER' %}
               class="js-example-basic-multiple"
               multiple="multiple"
             >
-              {% for email in user_emails %}
-              <option value="{{ email }}">{{ email }}</option>
+              {% for user in user_task_records %}
+                  {% if project not in user.projects %}
+              <option value="{{ user.email }}">{{ user.email }}</option>
+                  {%  endif %}
               {% endfor %}
             </select>
           </div>
@@ -375,6 +386,27 @@ user.type=='PROJECT_MANAGER' %}
           <button type="submit" class="btn btn-primary">Add</button>
         </div>
       </form>
+    <div>
+    {% for user_record in user_task_records %} {% if project in
+          user_record.projects %}
+        <div class="dev-organisation">
+          <div>
+              <div class="list-of-devs black-me">
+              <div class="dev-item-left">{{ user_record.first_name }}</div>
+              <div class="dev-item-right ">
+                <button
+                  class="btn-close close-delete-dev btn-close-white"
+                  aria-label="Close"
+                  onclick="remove_dev_from_project('{{ user_record.id }}', '{{ project.id }}')"
+                ></button
+                ><!-- Displaying the name of the user associated with the task -->
+              </div>
+         </div>
+          </div>
+         </div>
+          {% endif %} {% endfor %}
+    </div>
+
     </div>
   </div>
 </div>
@@ -382,7 +414,7 @@ user.type=='PROJECT_MANAGER' %}
 {#Modal for new_task#}
 <div class="modal fade" id="modal_new_task">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content black-me" >
       <div class="modal-header">
         <h5 class="modal-title">New Task</h5>
         <button
@@ -400,21 +432,21 @@ user.type=='PROJECT_MANAGER' %}
           value=""
         />
         <div class="modal-body">
-          <div class="form-group">
+          <div class="form-group-special">
             <label for="name">Task Name</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control-special"
               id="task_name"
               name="task_name"
               placeholder="This task's name"
             />
           </div>
-          <div class="form-group">
+          <div class="form-group-special">
             <label for="description">Task Description</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control-special"
               id="task_description"
               name="task_description"
               placeholder="This task's description"
@@ -627,7 +659,7 @@ user.type=='PROJECT_MANAGER' %}
 
   <div class="modal fade" id="modal_open_task_dev_{{ task.id }}">
     <div class="modal-dialog">
-      <div class="modal-content modal-task-dev">
+      <div class="modal-content black-me">
         <div class="modal-header">
           <h5 id="open_task_title">{{ task.name }}</h5>
           <button

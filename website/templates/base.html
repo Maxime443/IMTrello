@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
+    <link rel="icon" type="image/png" href="../static/img/logo.png"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,7 +80,7 @@
           <div class="app-header-actions-buttons">
             <div class="btn-group">
               <a
-                class="icon large"
+                class="bell-notifs"
                 data-placement="top"
                 data-popover-content="#a1"
                 data-toggle="popover"
@@ -87,7 +88,16 @@
                 href="#"
                 tabindex="0"
               >
-                <i class="bi bi-bell-fill"></i>
+                  {% if user.notifications|length > 0 %}
+                        <i class="bi bi-bell-fill" style="font-size: 1.5rem;color: mediumvioletred;"></i>
+                      {{ user.notifications|length }}
+                  {% else %}
+                        <i class="bi bi-bell-fill"></i>
+                  {% endif %}
+
+
+
+
               </a>
               <div class="hidden" id="a1" style="display: none">
                 <div class="popover-heading popover-header">Notifications
@@ -96,16 +106,16 @@
                 <div class="popover-body">
                     <ul id="notifications-list">
                         {% for notification in user.notifications %}
-                        <li class="notification-item">
+                        <li class="notification-item black-me">
                             <div class="notification-message">
                                 {% if notification.type == "project" %}
-                                <i class="bi bi-box icon-project notification-icon"></i>
+                                <i class="bi bi-box h5 icon-project notification-icon"></i>
                                 <span class="message-text">Assigned to a new project: {{ notification.message }}</span>
                                 {% elif notification.type == "comment" %}
-                                <i class="bi bi-chat-square icon-comment notification-icon"></i>
+                                <i class="bi bi-chat-square h5 icon-comment notification-icon"></i>
                                 <span class="message-text">New comment on task: {{ notification.message }}</span>
                                 {% elif notification.type == "task" %}
-                                <i class="bi bi-list icon-task notification-icon"></i>
+                                <i class="bi bi-list h5 icon-task notification-icon"></i>
                                 <span class="message-text">Assigned to a new task: {{ notification.message }}</span>
                                 {% endif %}
                             </div>
@@ -170,7 +180,7 @@
     ></script>
     <div class="modal fade" id="modal1">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content black-me">
           <div class="modal-header">
             <h5 class="modal-title">Nouveau Projet</h5>
             <button
@@ -186,7 +196,7 @@
                 <label for="name">Project name</label>
                 <input
                   type="name"
-                  class="form-control"
+                  class="form-control-special"
                   id="name"
                   name="name"
                   placeholder="Your project name"
@@ -196,7 +206,7 @@
                 <label for="description">Description</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control-special"
                   id="description"
                   name="description"
                   placeholder="Describe your project"
@@ -206,7 +216,7 @@
                 <label for="end_date">End of your project</label>
                 <input
                   type="date"
-                  class="form-control"
+                  class="form-control-special"
                   id="end_date"
                   name="end_date"
                   placeholder=""
