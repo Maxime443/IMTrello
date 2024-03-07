@@ -24,6 +24,15 @@ class User(UserMixin, db.Model):
     tasks=db.relationship('Task',secondary=user_task, backref='users')
     experience=db.Column(db.String(), nullable=False)
     type = db.Column(db.String(), nullable=False)
+    notifications = db.relationship('Notification', backref='user')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    type=db.Column(db.String(10000))
+    message = db.Column(db.String(10000))
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
 
 class Project(db.Model):

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint, jsonify
 from flask_login import login_required, current_user
-from .models import Project, User, Section, Task, Chat, Comment
+from .models import Project, User, Section, Task, Chat, Comment,Notification
 from . import db
 import json
 
@@ -58,6 +58,7 @@ def project(project_id):
     project = Project.query.get(project_id)
     sections = project.sections
     developers = User.query.filter_by(type='DEVELOPER').all()  # Récupérer tous les utilisateurs depuis la base de données
+    admin = User.query.get(project.admin_id)
     user_emails = [user.email for user in developers]  # Extraire les adresses e-mail des utilisateurs
     user_task_records = developers
     comments = Comment.query.all()
@@ -76,6 +77,8 @@ def project(project_id):
             devs = User.query.filter(User.email.in_(selected_emails)).all()  # Sélectionner les utilisateurs correspondant aux adresses e-mail sélectionnées
             for developer in devs:
                 developer.projects.append(Project.query.get(project_id))
+                notif=Notification(user_id=developer.id, type="project", project_id=project_id,task_id=None,message=project.name)
+                developer.notifications.append(notif)
             db.session.commit()
             return render_template('project.html', user=current_user, project=project,user_emails=user_emails,
                                    user_task_records=user_task_records,comments=comments,sections=sections)
@@ -84,13 +87,13 @@ def project(project_id):
         elif action == 'add_task':
             name = request.form.get('task_name')
             section_id = request.form.get('task_section_id')
-            print(section_id)
             description = request.form.get('task_description')
-
             new_task = Task(name="Task " + name, section_id=section_id, description=description, status='uncompleted', priority='medium')
+            admin.tasks.append(new_task)
             new_chat = Chat(task_id=new_task.id)
             new_task.chat_id = new_chat.id
             db.session.add(new_task)
+
             section = Section.query.get(section_id)
             section.tasks.append(new_task)
             db.session.commit()
@@ -113,6 +116,8 @@ def project(project_id):
                 if task not in developer.tasks:
                     x += 1
                     developer.tasks.append(task)
+                    notif=Notification(user_id=developer.id, type="task", project_id=project_id,task_id=task.id,message=task.name)
+                    developer.notifications.append(notif)
                 else:
                     dess += developer.first_name + " "
                     x -= 1
@@ -143,6 +148,10 @@ def project(project_id):
             new_comment = Comment(user_id=current_user.id, chat_id=chat.id, content=new_comment_content,
                                   creation_date=datetime.now())
             db.session.add(new_comment)
+            for user in task.users:
+                if user.id != current_user.id:
+                    notif=Notification(user_id=user.id, type="comment", project_id=project_id,task_id=task.id,message=task.name)
+                    user.notifications.append(notif)
             db.session.commit()
             # Update the comments list with the new comment
             comments.append(new_comment)
@@ -254,4 +263,15 @@ def update_task_section():
     task.section_id = new_section_id # Update this with your own logic
     db.session.commit()
 
+    return jsonify({})
+
+@views.route('/delete-all-notifications', methods=['POST'])
+def delete_all_notifications():
+    user = current_user
+    notifications = user.notifications
+    print(notifications)
+    for notification in notifications:
+        db.session.delete(notification)
+    print(notifications)
+    db.session.commit()
     return jsonify({})

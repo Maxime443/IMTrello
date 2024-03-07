@@ -90,21 +90,31 @@
                 <i class="bi bi-bell-fill"></i>
               </a>
               <div class="hidden" id="a1" style="display: none">
-                <div class="popover-heading popover-header">Notifications</div>
-
-                <div class="popover-body">
-                  <ul id="notification">
-                    <li class="not">
-                      <i class="bi bi-share-fill"></i>notif 1
-                    </li>
-                    <li>
-                      notif 2
-                    </li>
-                  </ul>
+                <div class="popover-heading popover-header">Notifications
+                  <a href="#" id="{{user.id}}" class="btn btn-sm rounded-5 border-0 shadow-none mx-1" ><i class="bi bi-trash3-fill fs-6 text-danger"></i></a>
                 </div>
-              </div>
-              
+                <div class="popover-body">
+                    <ul id="notifications-list">
+                        {% for notification in user.notifications %}
+                        <li class="notification-item">
+                            <div class="notification-message">
+                                {% if notification.type == "project" %}
+                                <i class="bi bi-box icon-project notification-icon"></i>
+                                <span class="message-text">Assigned to a new project: {{ notification.message }}</span>
+                                {% elif notification.type == "comment" %}
+                                <i class="bi bi-chat-square icon-comment notification-icon"></i>
+                                <span class="message-text">New comment on task: {{ notification.message }}</span>
+                                {% elif notification.type == "task" %}
+                                <i class="bi bi-list icon-task notification-icon"></i>
+                                <span class="message-text">Assigned to a new task: {{ notification.message }}</span>
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+        </div>
 
             {% block share%}{% endblock %}
           </div>

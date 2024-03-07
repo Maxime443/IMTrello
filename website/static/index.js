@@ -12,6 +12,19 @@ function delete_Project(projectId) {
   });
 }
 
+function deleteAllNotifications(user_id){
+  console.log("caca")
+  console.log(user_id==="1") 
+  user_id=parseInt(user_id) 
+  console.log(user_id===1) 
+  fetch("/delete-all-notifications", {
+    method: "POST",
+    body: JSON.stringify({user_id: user_id}),
+  }).then((_res) => {
+    window.location.href = "/";
+  });
+}
+
 function rename_Project(projectId) {
   fetch("/delete-project", {
     method: "POST",
@@ -323,15 +336,7 @@ function remove_dev_from_task(user_id, task_id, project_id) {
         
         });
 
-        const toastTrigger = document.getElementById('liveToastBtn')
-        const toastLiveExample = document.getElementById('liveToast')
-        
-        if (toastTrigger) {
-          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-          toastTrigger.addEventListener('click', () => {
-            toastBootstrap.show()
-          })
-        }
+
         $(function(){
           $("[data-toggle=popover]").popover({
               html : true,
@@ -344,4 +349,8 @@ function remove_dev_from_task(user_id, task_id, project_id) {
                 return $(title).children(".popover-heading").html();
               }
           });
+          $(document).on("click", ".popover .btn" , function(){
+            var id = $(this).attr("id");
+            deleteAllNotifications(id);
+        });
       });
