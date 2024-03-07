@@ -63,16 +63,16 @@ a {
 
 .app {
 	min-height: 80vh;
-	width: 98%;
+	width: 100%;
 	
 
 	background: linear-gradient(180deg, #010314,#010314,#010314, #010314,#0c082c, #261463, #4925b0, #6d3dee, #8d67f2, #ad92f6);
 	border-bottom-right-radius: 100px;
 	border-bottom-left-radius: 100px;
-	padding: 2vw 2vw 2vw;
+	padding: 3vw 3vw 3vw;
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 10px;
+	margin: 10px;
 }
 
 .app-header {
