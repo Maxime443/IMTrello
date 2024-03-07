@@ -1,26 +1,14 @@
 {% extends "base.html" %} {% block title %}Project{% endblock %} {% block share
 %} {% if user.type=='PROJECT_MANAGER' %}
-<button
-  type="button"
-  class="btn btn-outline-primary"
-  data-bs-toggle="modal"
-  data-bs-target="#modal_share"
->
-  Share
+<button class="icon large" data-bs-toggle="modal" data-bs-target="#modal_share">
+  <i class="bi bi-share-fill"></i>
 </button>
 {% endif %} {% endblock %} {% block content %} {% if
 user.type=='PROJECT_MANAGER' %}
 <div display="flex">
   <h1 align="center" draggable="true">{{ project.name }}</h1>
-  <button
-  type="button"
-  class="btn btn-outline-primary"
-  data-bs-toggle="modal"
-  data-bs-target="#modal_share"
->
-  Share
-</button>
 </div>
+<div class="div-sec">
 <ol class="list-group list-group-flush" id="sections">
   {% for section in project.sections %}
   <li class="section" id="section-{{ section.id }}">
@@ -41,50 +29,35 @@ user.type=='PROJECT_MANAGER' %}
           data-section-id="{{ section.id }}"
         >
           {% for task in section.tasks | sort(attribute='order') %}
-              <style>
-                  .black-background {
-                      background-color: black;
-                  }
-              </style>
+          <style>
+            .black-background {
+              background-color: black;
+            }
+          </style>
 
           <li data-task-id="{{ task.id }}" draggable="true" class="li_task">
+            <div
+              class="task"
+              data-bs-toggle="modal"
+              data-bs-target="#modal_open_task_{{ task.id }}"
+            >
+              {{ task.name }}
 
-
-
-              <div class="task" data-bs-toggle="modal" data-bs-target="#modal_open_task_{{ task.id }}">{{ task.name }}
-
-                   <div class="d-flex flex-row mt-3 mt-md-2">
-                       <div class="icon-container">
-                           <div class="status status-icons">
-                                {% if task.status == 'completed' %}
-                                    <i class="bi bi-check-circle fs-6 text-success"></i>
-                                {% elif task.status == 'uncompleted' %}
-                                    <i class="bi bi-three-dots fs-6 text-warning"></i>
-                                {% else %}
-                                    <i class="bi bi-x-circle fs-6 text-danger"></i>
-                                {% endif %}
-
-                           </div>
-                       </div>
-
-
-
-
-
-
+              <div class="d-flex flex-row mt-3 mt-md-2">
+                <div class="icon-container">
+                  <div class="status status-icons">
+                    {% if task.status == 'completed' %}
+                    <i class="bi bi-check-circle fs-6 text-success"></i>
+                    {% elif task.status == 'uncompleted' %}
+                    <i class="bi bi-three-dots fs-6 text-warning"></i>
+                    {% else %}
+                    <i class="bi bi-x-circle fs-6 text-danger"></i>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
-              </div>
-
-
-
-
-
-
-
-
+            </div>
           </li>
-
-
 
           {% endfor %}
         </ol>
@@ -114,236 +87,227 @@ user.type=='PROJECT_MANAGER' %}
   </div>
   {% endif %}
 </ol>
-
-{% for section in project.sections %}
-{% for task in section.tasks %}
+</div>
+{% for section in project.sections %} {% for task in section.tasks %}
 
 <div class="modal fade" id="modal_open_task_{{ task.id }}">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header-special ">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header-special">
+        <h5 id="open_task_title">{{ task.name }}</h5>
 
-                                    <h5 id="open_task_title">
-                                        {{ task.name }}
-                                    </h5>
+        <button
+          class="btn-close close-task pushed-right"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="open_task_status">
+          <div class="form-group">
+            <label for="task_status_select">Status </label>
+            <select
+              class="form-control"
+              id="task_status_select"
+              onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})"
+            >
+              {% if task.status == "todo" %}
+              <option value="uncompleted" selected>Uncompleted</option>
+              <option value="completed">Completed</option>
+              <option value="blocked">Blocked</option>
+              {% elif task.status == "completed" %}
+              <option value="uncompleted">Uncompleted</option>
+              <option value="completed" selected>Completed</option>
+              <option value="blocked">Blocked</option>
+              {% elif task.status == "blocked" %}
+              <option value="uncompleted">Uncompleted</option>
+              <option value="completed">Completed</option>
+              <option value="blocked" selected>Blocked</option>
+              {% else %}
+              <option value="uncompleted">Uncompleted</option>
+              <option value="completed">Completed</option>
+              <option value="blocked">Blocked</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
 
-                                    <button class="btn-close close-task pushed-right" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                               <div class="modal-body">
+        <div class="form-group">
+          <div class="open_task_priority">
+            <label for="task_priority_select">Priority </label>
 
+            <select
+              class="form-control black-form-control"
+              id="task_priority_select"
+              onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})"
+            >
+              {% if task.priority == "low" %}
+              <option value="low" selected>Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              {% elif task.priority == "medium" %}
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              {% else %}
+              <option value="uncompleted">Low</option>
+              <option value="completed">Medium</option>
+              <option value="blocked" selected>High</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
 
-                                    <div class="open_task_status">
-                                    <div class="form-group">
-                                        <label for="task_status_select">Status </label>
-                                        <select class="form-control" id="task_status_select" onchange="updateTaskStatus({{ task.id }}, value, {{ project.id }})">
-                                            {% if task.status == "todo" %}
-                                                <option value="uncompleted" selected >Uncompleted</option>
-                                                <option value="completed" >Completed</option>
-                                                <option value="blocked">Blocked</option>
-                                            {% elif task.status == "completed" %}
-                                                <option value="uncompleted">Uncompleted</option>
-                                                <option value="completed" selected>Completed</option>
-                                                <option value="blocked">Blocked</option>
-                                            {% elif task.status == "blocked" %}
-                                                <option value="uncompleted">Uncompleted</option>
-                                                <option value="completed">Completed</option>
-                                                <option value="blocked" selected>Blocked</option>
-                                            {% else %}
-                                                <option value="uncompleted">Uncompleted</option>
-                                                <option value="completed">Completed</option>
-                                                <option value="blocked">Blocked</option>
-                                            {% endif %}
-                                        </select>
-                                    </div>
-                                    </div>
+        <div class="form-group">Devs on this task :</div>
 
-                               <div class="form-group">
+        <div class="form-group">
+          <form method="POST" action="/project/{{ project.id }}">
+            <input type="hidden" name="action" value="add_developer_to_task" />
+            <input
+              type="hidden"
+              id="task_id_{{ task.id }}"
+              name="task_id"
+              value="{{ task.id }}"
+            />
+            <div class="modal-body">
+              <label for="name">Share to</label>
+              <div class="form-group share-task-to-devs">
+                <select
+                  id="developer_emails_for_task_{{ task.id }}"
+                  name="developer_emails_for_task"
+                  class="js-example-basic-multiple"
+                  multiple="multiple"
+                >
+                  {% for user in user_task_records %} {% if task not in
+                  user.tasks %}
+                  <option value="{{ user.email }}">{{ user.email }}</option>
+                  {% endif %} {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+        <ul class="list-group">
+          <!-- Added ul tag to enclose list items -->
+          {% for user_record in user_task_records %} {% if task in
+          user_record.tasks %}
+          <li>
+            <div class="list-of-devs">
+              <div class="dev-item-left">{{ user_record.first_name }}</div>
+              <div class="dev-item-right">
+                <button
+                  class="btn-close close-delete-dev btn-close-white"
+                  aria-label="Close"
+                  onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"
+                ></button
+                ><!-- Displaying the name of the user associated with the task -->
+              </div>
+            </div>
+          </li>
+          {% endif %} {% endfor %}
+          <div class="form-group delete-bitch">
+            <button
+              type="button"
+              class="btn btn-danger"
+              onClick="deleteTask({{ task.id }},{{ section.id }},{{ project.id }})"
+            >
+              Delete task
+            </button>
+          </div>
+        </ul>
+      </div>
 
-                                   <div class="open_task_priority">
+      <div class="task-modal-project-manager">
+        <section class="my-messenger">
+          <header class="my-messenger-header">
+            <div class="my-messenger-header-title">
+              <i class="fas fa-comment-alt"></i> SimpleChat
+            </div>
+            <div class="my-messenger-header-options">
+              <span><i class="fas fa-cog"></i></span>
+            </div>
+          </header>
 
-                                        <label for="task_priority_select">Priority </label>
+          <main class="my-messenger-chat">
+            {% for comment in comments %} {% if comment.chat_id == task.chat_id
+            %} {% if comment.user_id == current_user.id %}
+            <div class="msg right-msg">
+              <div
+                class="msg-img"
+                style="
+                  background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg);
+                "
+              ></div>
 
-                                        <select class="form-control black-form-control" id="task_priority_select" onchange="updateTaskPriority({{ task.id }}, value, {{ project.id }})">
-                                            {% if task.priority == "low" %}
-                                                <option value="low" selected>Low</option>
-                                                <option value="medium">Medium</option>
-                                                <option value="high">High</option>
-                                            {% elif task.priority == "medium" %}
-                                                <option value="low">Low</option>
-                                                <option value="medium" selected>Medium</option>
-                                                <option value="high">High</option>
-                                            {% else %}
-                                                <option value="uncompleted">Low</option>
-                                                <option value="completed">Medium</option>
-                                                <option value="blocked" selected>High</option>
-                                            {% endif %}
-                                        </select>
-                                    </div>
-                               </div>
+              <div class="msg-bubble">
+                <div class="msg-info">
+                  <div class="msg-info-name">
+                    {% for user_record in user_task_records %} {% if
+                    user_record.id == comment.user_id %} {{
+                    user_record.first_name }} {% endif %} {% endfor %}
+                  </div>
+                  <div class="msg-info-time">
+                    {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                  </div>
+                </div>
 
+                <div class="msg-text">{{ comment.content }}</div>
+              </div>
+            </div>
+            {% else %}
+            <div class="msg left-msg">
+              <div
+                class="msg-img"
+                style="
+                  background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg);
+                "
+              ></div>
 
+              <div class="msg-bubble">
+                <div class="msg-info">
+                  <div class="msg-info-name">
+                    {% for user_record in user_task_records %} {% if
+                    user_record.id == comment.user_id %} {{
+                    user_record.first_name }} {% endif %} {% endfor %}
+                  </div>
+                  <div class="msg-info-time">
+                    {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                  </div>
+                </div>
 
-                                       <div class="form-group">
-                                           Devs on this task :
-                                       </div>
+                <div class="msg-text">{{ comment.content}}</div>
+              </div>
+            </div>
 
-                                        <div class="form-group">
-                                               <form method="POST" action="/project/{{ project.id }}">
-                                                     <input type="hidden" name="action" value= "add_developer_to_task">
-                                                     <input type="hidden" id="task_id_{{ task.id }}" name="task_id" value={{ task.id }}>
-                                                     <div class="modal-body">
-                                                     <label for="name">Share to</label>
-                                                     <div class="form-group share-task-to-devs">
-                                                         <select id="developer_emails_for_task_{{ task.id }}"
-                                                                 name="developer_emails_for_task"
-                                                                 class="js-example-basic-multiple"
-                                                                 multiple="multiple">
-                                                             {% for user in user_task_records %}
-                                                                 {%  if task not in user.tasks %}
-                                                             <option value="{{ user.email }}">{{ user.email }}</option>
-                                                                 {% endif %}
-                                                             {% endfor %}
-                                                         </select>
-                                                     </div>
-                                                     <button type="submit" class="btn btn-primary" >Add</button>
-                                                    </div>
+            {% endif %} {% endif %} {% endfor %}
+          </main>
 
-                                                    </form>
-                                       </div>
-                                                <ul class="list-group" > <!-- Added ul tag to enclose list items -->
-                                                    {% for user_record in user_task_records %}
-                                                        {%  if task in user_record.tasks %}
-                                                            <li >
-                                                            <div class="list-of-devs">
-                                                                <div class="dev-item-left ">
-                                                                     {{ user_record.first_name }}
+          <form
+            class="my-messenger-input-area"
+            method="POST"
+            action="/project/{{ project.id }}"
+          >
+            <input type="hidden" name="action" value="submit_comment" />
+            <input type="hidden" name="task_id" value="{{ task.id }}" />
+            <input type="hidden" name="chat_id" value="{{ task.chat_id }}" />
+            <label>
+              <input
+                type="text"
+                class="my-messenger-input"
+                name="new_comment"
+                placeholder="Enter your message..."
+              />
+            </label>
+            <button type="submit" class="my-messenger-send-btn">Send</button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
 
-                                                                </div>
-                                                                <div class="dev-item-right ">
-                                                                    <button class="btn-close close-delete-dev btn-close-white" aria-label="Close" onclick="remove_dev_from_task({{ user_record.id }},{{ task.id }},{{ project.id }})"></button><!-- Displaying the name of the user associated with the task -->
-
-                                                                </div>
-                                                            </div>
-
-
-                                                            </li>
-                                                        {%  endif %}
-
-                                                    {% endfor %}
-                                <div class="form-group delete-bitch">
-                                   <button
-                                          type="button"
-                                          class="btn btn-danger"
-                                          onClick="deleteTask({{ task.id }},{{ section.id }},{{ project.id }})"
-                                  >Delete task</button>
-                               </div></ul>
-
-                               </div>
-
-
-                            <div class="task-modal-project-manager">
-                               <section class="my-messenger">
-                                  <header class="my-messenger-header">
-                                    <div class="my-messenger-header-title">
-                                      <i class="fas fa-comment-alt"></i> SimpleChat
-                                    </div>
-                                    <div class="my-messenger-header-options">
-                                      <span><i class="fas fa-cog"></i></span>
-                                    </div>
-                                  </header>
-
-                                  <main class="my-messenger-chat">
-
-                                      {% for comment in comments %}
-                                                {% if comment.chat_id == task.chat_id %}
-                                                    {% if comment.user_id == current_user.id %}
-                                                          <div class="msg right-msg">
-                                                              <div
-                                                               class="msg-img"
-                                                               style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
-                                                              ></div>
-
-                                                              <div class="msg-bubble">
-                                                                <div class="msg-info">
-                                                                  <div class="msg-info-name">
-                                                                      {% for user_record in user_task_records %}
-                                                                            {% if user_record.id == comment.user_id %}
-                                                                                {{ user_record.first_name }}
-                                                                            {% endif %}
-                                                                      {% endfor %}</div>
-                                                                  <div class="msg-info-time">
-                                                                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}</div>
-                                                                </div>
-
-
-                                                                <div class="msg-text">
-                                                                    {{ comment.content }}
-                                                                </div>
-                                                              </div>
-                                                        </div>
-                                                    {% else %}
-                                                          <div class="msg left-msg">
-                                                              <div
-                                                               class="msg-img"
-                                                               style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-                                                              ></div>
-
-                                                              <div class="msg-bubble">
-                                                                <div class="msg-info">
-                                                                  <div class="msg-info-name">
-                                                                      {% for user_record in user_task_records %}
-                                                                            {% if user_record.id == comment.user_id %}
-                                                                                {{ user_record.first_name }}
-                                                                            {% endif %}
-                                                                      {% endfor %}
-                                                                  </div>
-                                                                  <div class="msg-info-time">{{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
-                                                                  </div>
-                                                                </div>
-
-                                                                <div class="msg-text">
-                                                                    {{ comment.content}}
-                                                                </div>
-                                                              </div>
-                                                            </div>
-
-                                                    {% endif %}
-                                               {% endif %}
-                                      {% endfor %}
-                                  </main>
-
-                                          <form class="my-messenger-input-area" method="POST" action="/project/{{ project.id }}">
-                                                <input type="hidden" name="action" value="submit_comment">
-                                                <input type="hidden" name="task_id" value="{{ task.id }}">
-                                                <input type="hidden" name="chat_id" value="{{ task.chat_id }}">
-                                                <label >
-                                                    <input type="text" class="my-messenger-input" name="new_comment"  placeholder="Enter your message..."></input>
-                                                </label>
-                                                <button type="submit" class="my-messenger-send-btn">Send</button>
-                                            </form>
-
-
-                                </section>
-                            </div>
-
-
-
-
-
-                            </div>
-
-
-                        </div>
-
-           </div>
-
-{% endfor %}
-{% endfor %}
-
-
-
-
-{# Modal new_section#}
+{% endfor %} {% endfor %} {# Modal new_section#}
 <div class="modal fade" id="modal_new_section">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -474,9 +438,7 @@ user.type=='PROJECT_MANAGER' %}
   <div class="row">
     <div class="col-md-4">
       <div class="black-me">
-        <div
-          class="card-header"
-        >
+        <div class="card-header">
           <div class="card-body justify-content-center align-items-center">
             <div
               class="w-100 d-flex justify-content-between align-items-center"
@@ -491,7 +453,8 @@ user.type=='PROJECT_MANAGER' %}
                 ></i>
               </span>
               <h3 class="fw-bold fs-3 fs-md-3">
-                  {{ user.tasks | selectattr('status', 'equalto', 'completed') | map(attribute='status') | list | length }}
+                {{ user.tasks | selectattr('status', 'equalto', 'completed') |
+                map(attribute='status') | list | length }}
               </h3>
             </div>
             <div class="w-100 mt-2 py-1">
@@ -503,9 +466,7 @@ user.type=='PROJECT_MANAGER' %}
     </div>
     <div class="col-md-4">
       <div class="black-me">
-        <div
-          class="card-header"
-        >
+        <div class="card-header">
           <div class="card-body justify-content-center align-items-center">
             <div
               class="w-100 d-flex justify-content-between align-items-center"
@@ -520,7 +481,8 @@ user.type=='PROJECT_MANAGER' %}
                 ></i>
               </span>
               <h3 class="fw-bold fs-3 fs-md-3">
-                  {{ user.tasks | selectattr('status', 'equalto', 'uncompleted') | map(attribute='status') | list | length }}
+                {{ user.tasks | selectattr('status', 'equalto', 'uncompleted') |
+                map(attribute='status') | list | length }}
               </h3>
             </div>
             <div class="w-100 mt-2 py-1">
@@ -532,7 +494,7 @@ user.type=='PROJECT_MANAGER' %}
     </div>
     <div class="col-md-4">
       <div class="black-me">
-        <div class="card-header ">
+        <div class="card-header">
           <div class="card-body justify-content-center align-items-center">
             <div
               class="w-100 d-flex justify-content-between align-items-center"
@@ -547,7 +509,8 @@ user.type=='PROJECT_MANAGER' %}
                 ></i>
               </span>
               <h3 class="fw-bold fs-3 fs-md-3">
-                  {{ user.tasks | selectattr('status', 'equalto', 'blocked') | map(attribute='status') | list | length }}
+                {{ user.tasks | selectattr('status', 'equalto', 'blocked') |
+                map(attribute='status') | list | length }}
               </h3>
             </div>
             <div class="w-100 mt-2 py-1">
@@ -584,81 +547,76 @@ user.type=='PROJECT_MANAGER' %}
             >
           </h6>
           <small class="fw-medium fst-italic opacity-50">
-            {% for section in project.sections %}
-                  {% if task.section_id == section.id %}
-                      {{ section.name }}
-                  {% endif %}
-            {% endfor %}
+            {% for section in project.sections %} {% if task.section_id ==
+            section.id %} {{ section.name }} {% endif %} {% endfor %}
           </small>
           <div class="d-flex flex-row mt-3 mt-md-2">
-
             <div class="status">
-                <span
-                    {% if task.status == 'completed' %}
-                        class="badge text-success"
-                        style="background-color: rgba(35,245,154,0.12)"
-                    {% elif task.status == 'uncompleted' %}
-                        class="badge text-warning"
-                        style="background-color: rgba(245, 166, 35, 0.125)"
-                    {% else %}
-                        class="badge text-danger"
-                        style="background-color: rgba(245,35,35,0.12)"
-                    {% endif %}
-
-                >
-                    {{ task.status }}
-                </span>
+              <span {% if task.status == 'completed' %} class="badge
+              text-success" style="background-color: rgba(35,245,154,0.12)" {%
+              elif task.status == 'uncompleted' %} class="badge text-warning"
+              style="background-color: rgba(245, 166, 35, 0.125)" {% else %}
+              class="badge text-danger" style="background-color:
+              rgba(245,35,35,0.12)" {% endif %} > {{ task.status }}
             </div>
 
             <div class="d-flex align-items-center">
               <i class="bi bi-dot"></i>
               <div class="priority">
-                <span
-                    {% if task.priority == 'low' %}
-                        class="badge text-success"
-                        style="background-color: rgba(35,245,42,0.12)"
-                    {% elif task.priority == 'medium' %}
-                        class="badge text-warning"
-                        style="background-color: rgba(245, 166, 35, 0.125)"
-                    {% else %}
-                        class="badge text-danger"
-                        style="background-color: rgba(245,35,35,0.12)"
-                    {% endif %}
-
-                  >{{ task.priority }}</span
-                >
+                <span {% if task.priority == 'low' %} class="badge text-success"
+                style="background-color: rgba(35,245,42,0.12)" {% elif
+                task.priority == 'medium' %} class="badge text-warning"
+                style="background-color: rgba(245, 166, 35, 0.125)" {% else %}
+                class="badge text-danger" style="background-color:
+                rgba(245,35,35,0.12)" {% endif %} >{{ task.priority }}
               </div>
             </div>
           </div>
           <div class="collapse" id="collapseExample{{task.id}}">
-            <div class=" description">
-              {{task.description}}
-            </div>
+            <div class="description">{{task.description}}</div>
           </div>
-
         </div>
         <div
           class="col-12 col-md-4 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end"
         >
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'completed', {{ project.id }})">
+            ><button
+              class="btn btn-sm rounded-5 border-0 shadow-none mx-1"
+              onclick="updateTaskStatus({{ task.id }}, 'completed', {{ project.id }})"
+            >
               <i class="bi bi-check-circle fs-6 text-success"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'uncompleted', {{ project.id }})">
+            ><button
+              class="btn btn-sm rounded-5 border-0 shadow-none mx-1"
+              onclick="updateTaskStatus({{ task.id }}, 'uncompleted', {{ project.id }})"
+            >
               <i class="bi bi-three-dots fs-6 text-warning"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" onclick="updateTaskStatus({{ task.id }}, 'blocked', {{ project.id }})">
+            ><button
+              class="btn btn-sm rounded-5 border-0 shadow-none mx-1"
+              onclick="updateTaskStatus({{ task.id }}, 'blocked', {{ project.id }})"
+            >
               <i class="bi bi-x-circle fs-6 text-danger"></i></button
           ></span>
           <span
-            ><button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" data-bs-toggle="modal"
-  data-bs-target="#modal_open_task_dev_{{ task.id }}">
+            ><button
+              class="btn btn-sm rounded-5 border-0 shadow-none mx-1"
+              data-bs-toggle="modal"
+              data-bs-target="#modal_open_task_dev_{{ task.id }}"
+            >
               <i class="bi bi-chat fs-6 text-primary"></i></button
           ></span>
           <span>
-            <button class="btn btn-sm rounded-5 border-0 shadow-none mx-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{task.id}}" aria-expanded="false" aria-controls="collapseExample">
+            <button
+              class="btn btn-sm rounded-5 border-0 shadow-none mx-1"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseExample{{task.id}}"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            >
               <i class="bi bi-arrow-down-circle fs-6 text-info"></i>
             </button>
           </span>
@@ -667,106 +625,105 @@ user.type=='PROJECT_MANAGER' %}
     </div>
   </div>
 
-      <div class="modal fade" id="modal_open_task_dev_{{ task.id }}">
-                        <div class="modal-dialog">
-                            <div class="modal-content modal-task-dev">
-                                <div class="modal-header">
-                                    <h5 id="open_task_title">
-                                        {{ task.name }}
-                                    </h5>
-                                    <button class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                               <div class="modal-body-special">
+  <div class="modal fade" id="modal_open_task_dev_{{ task.id }}">
+    <div class="modal-dialog">
+      <div class="modal-content modal-task-dev">
+        <div class="modal-header">
+          <h5 id="open_task_title">{{ task.name }}</h5>
+          <button
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body-special">
+          <section class="my-messenger">
+            <header class="my-messenger-header">
+              <div class="my-messenger-header-title">
+                <i class="fas fa-comment-alt"></i> SimpleChat
+              </div>
+              <div class="my-messenger-header-options">
+                <span><i class="fas fa-cog"></i></span>
+              </div>
+            </header>
 
+            <main class="my-messenger-chat">
+              {% for comment in comments %} {% if comment.chat_id ==
+              task.chat_id %} {% if comment.user_id == current_user.id %}
+              <div class="msg right-msg">
+                <div
+                  class="msg-img"
+                  style="
+                    background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg);
+                  "
+                ></div>
 
-                                   <section class="my-messenger">
-                                  <header class="my-messenger-header">
-                                    <div class="my-messenger-header-title">
-                                      <i class="fas fa-comment-alt"></i> SimpleChat
-                                    </div>
-                                    <div class="my-messenger-header-options">
-                                      <span><i class="fas fa-cog"></i></span>
-                                    </div>
-                                  </header>
-
-                                  <main class="my-messenger-chat">
-
-                                      {% for comment in comments %}
-                                                {% if comment.chat_id == task.chat_id %}
-                                                    {% if comment.user_id == current_user.id %}
-                                                          <div class="msg right-msg">
-                                                              <div
-                                                               class="msg-img"
-                                                               style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
-                                                              ></div>
-
-                                                              <div class="msg-bubble">
-                                                                <div class="msg-info">
-                                                                  <div class="msg-info-name">
-                                                                      {% for user_record in user_task_records %}
-                                                                            {% if user_record.id == comment.user_id %}
-                                                                                {{ user_record.first_name }}
-                                                                            {% endif %}
-                                                                      {% endfor %}</div>
-                                                                  <div class="msg-info-time">
-                                                                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}</div>
-                                                                </div>
-
-
-                                                                <div class="msg-text">
-                                                                    {{ comment.content }}
-                                                                </div>
-                                                              </div>
-                                                        </div>
-                                                    {% else %}
-                                                          <div class="msg left-msg">
-                                                              <div
-                                                               class="msg-img"
-                                                               style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-                                                              ></div>
-
-                                                              <div class="msg-bubble">
-                                                                <div class="msg-info">
-                                                                  <div class="msg-info-name">
-                                                                      {% for user_record in user_task_records %}
-                                                                            {% if user_record.id == comment.user_id %}
-                                                                                {{ user_record.first_name }}
-                                                                            {% endif %}
-                                                                      {% endfor %}
-                                                                  </div>
-                                                                  <div class="msg-info-time">{{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
-                                                                  </div>
-                                                                </div>
-
-                                                                <div class="msg-text">
-                                                                    {{ comment.content}}
-                                                                </div>
-                                                              </div>
-                                                            </div>
-
-                                                    {% endif %}
-                                               {% endif %}
-                                      {% endfor %}
-                                  </main>
-
-                                          <form class="my-messenger-input-area" method="POST" action="/project/{{ project.id }}">
-                                                <input type="hidden" name="action" value="submit_comment">
-                                                <input type="hidden" name="task_id" value="{{ task.id }}">
-                                                <input type="hidden" name="chat_id" value="{{ task.chat_id }}">
-                                                <label >
-                                                    <input type="text" class="my-messenger-input" name="new_comment"  placeholder="Enter your message..."></input>
-                                                </label>
-                                                <button type="submit" class="my-messenger-send-btn">Send</button>
-                                            </form>
-
-
-                                </section>
-
-                                </div>
-
-                            </div>
-                        </div>
+                <div class="msg-bubble">
+                  <div class="msg-info">
+                    <div class="msg-info-name">
+                      {% for user_record in user_task_records %} {% if
+                      user_record.id == comment.user_id %} {{
+                      user_record.first_name }} {% endif %} {% endfor %}
                     </div>
+                    <div class="msg-info-time">
+                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                    </div>
+                  </div>
+
+                  <div class="msg-text">{{ comment.content }}</div>
+                </div>
+              </div>
+              {% else %}
+              <div class="msg left-msg">
+                <div
+                  class="msg-img"
+                  style="
+                    background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg);
+                  "
+                ></div>
+
+                <div class="msg-bubble">
+                  <div class="msg-info">
+                    <div class="msg-info-name">
+                      {% for user_record in user_task_records %} {% if
+                      user_record.id == comment.user_id %} {{
+                      user_record.first_name }} {% endif %} {% endfor %}
+                    </div>
+                    <div class="msg-info-time">
+                      {{ comment.creation_date.strftime('%H:%M %d/%m/%Y') }}
+                    </div>
+                  </div>
+
+                  <div class="msg-text">{{ comment.content}}</div>
+                </div>
+              </div>
+
+              {% endif %} {% endif %} {% endfor %}
+            </main>
+
+            <form
+              class="my-messenger-input-area"
+              method="POST"
+              action="/project/{{ project.id }}"
+            >
+              <input type="hidden" name="action" value="submit_comment" />
+              <input type="hidden" name="task_id" value="{{ task.id }}" />
+              <input type="hidden" name="chat_id" value="{{ task.chat_id }}" />
+              <label>
+                <input
+                  type="text"
+                  class="my-messenger-input"
+                  name="new_comment"
+                  placeholder="Enter your message..."
+                />
+              </label>
+              <button type="submit" class="my-messenger-send-btn">Send</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endif %} {% endblock %}

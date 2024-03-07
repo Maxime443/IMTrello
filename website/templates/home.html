@@ -10,6 +10,7 @@
     {% endif %}
 </h1>
 <div class="main-container container">
+    {% if user.type=='PROJECT_MANAGER' %}
     <div class="content-block shadow-lg p-3 mb-5 bg-black rounded">
         <div class="content-text">
             <h2>IMTRELLO</h2>
@@ -17,7 +18,7 @@
             <button data-bs-toggle="modal" data-bs-target="#modal1" class="btn btn-outline-warning">New Project</button>
         </div>
     </div>
-
+    {% endif %}
 </div>
 <div class="tiles">
    {% for project in user.projects %}

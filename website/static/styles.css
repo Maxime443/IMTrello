@@ -60,13 +60,56 @@ html{
 
 
 #sections{
-    display: flex;
-    flex-direction: row;
     list-style: none;
     padding: 0 6px;
     bottom: 0;
     left: 0;
     top: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 275px); /* Largeur fixe pour chaque colonne */
+    grid-column-gap: 13px;
+    grid-row-gap: 2vw;
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown-menu{
+    width: 300px;
+}
+
+.popover {
+    color: #fff; /* Couleur du texte */
+    border-radius: 10px; /* Coins arrondis */
+    width: 300px; /* Largeur du toast */
+    padding: 10px; /* Espacement intérieur */
+}
+
+.popover-header {
+    background-color: #4925b0; /* Couleur de fond de l'en-tête */
+    color: #fff; /* Couleur du texte de l'en-tête */
+    border-bottom: none; /* Pas de bordure en bas de l'en-tête */
+    border-top-left-radius: 10px; /* Coins arrondis en haut à gauche */
+    border-top-right-radius: 10px; /* Coins arrondis en haut à droite */
+}
+
+.popover-body {
+    background-color: #6d3dee; /* Couleur de fond du corps du toast */
+    color: #fff; /* Couleur du texte du corps du toast */
+
+}
+
+#notification{
+    margin:0;
+    padding:0;
+}
+
+.popover-header .btn-close {
+    color: #fff; /* Couleur de la croix de fermeture */
+    opacity: 0.75; /* Opacité de la croix de fermeture */
+}
+
+.div-sec{
+    margin-top:2vw;
 }
 
 .carte{
@@ -93,7 +136,7 @@ html{
     vertical-align: top;
 }
 
-li {
+li:not(.section) {
     list-style-type: none;
     display: flex;
     flex-direction: column;
@@ -182,7 +225,6 @@ li {
 }
 
 .content{
-    padding: 0px 12px;
     width:100%
 }
 
@@ -190,9 +232,6 @@ li {
     padding-right: 10px;
 }
 
-.content{
-    margin-top: 56px;
-}
 
 .flash{
     position:relative;
@@ -289,7 +328,7 @@ h136 {
 
 master{
     padding: 0px 20px;
-    width: 130px;
+    width: 120px;
 
 }
 

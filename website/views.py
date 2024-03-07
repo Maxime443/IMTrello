@@ -235,4 +235,23 @@ def update_task_priority(task_id):
         db.session.commit()
         return 'Task priority updated successfully.', 200
 
+@views.route('/update_task_section', methods=['POST'])
+def update_task_section():
+    data = request.get_json()
+    task_id = data.get('task_id')
+    new_section_id = data.get('new_section_id')
 
+    task = Task.query.get(task_id)
+    if not task:
+        return 'Task not found.', 404
+
+    # Assuming you have a Section model and a way to order tasks within a section
+    section = Section.query.get(new_section_id)
+    if not section:
+        return 'Section not found.', 404
+
+    # Update task section and position
+    task.section_id = new_section_id # Update this with your own logic
+    db.session.commit()
+
+    return jsonify({})

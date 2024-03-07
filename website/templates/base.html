@@ -49,7 +49,7 @@
         <div class="app-header-logo">
           <div class="logo">
             <master class="">
-              <img src="../static/img/logo.png" alt=""/>
+              <img src="../static/img/logo.png" alt="" />
             </master>
             <h1 class="logo-title">
               <span>IMTRELLO</span>
@@ -61,7 +61,6 @@
           <div class="tabs">
             {% if user.is_authenticated %}
             <a href="/" id="home"> Home </a>
-            <a href="#" id="about"> About </a>
             <a href="/logout" id="logout"> Logout </a>
             {%else%}
             <a href="/login"> Login </a>
@@ -69,6 +68,7 @@
             {%endif%}
           </div>
         </div>
+        {% if user.is_authenticated %}
         <div class="app-header-actions">
           <button class="user-profile">
             <span>{{user.first_name}}</span>
@@ -76,43 +76,45 @@
               <img src="https://assets.codepen.io/285131/almeria-avatar.jpeg" />
             </span>
           </button>
-          <div class="app-header-actions-buttons" id="bell">
-            <button class="icon-button large">
-              <i class="bi bi-bell-fill"></i>
-            </button>
-            <button class="icon-button large">
-              <i class="ph-bell"></i>
-            </button>
-          </div>
-        </div>
-        <div class="notifications" id="box">
-          <h2>Notifications - <span>2</span></h2>
-          <div
-            id="liveToast"
-            class="toast"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div class="toast-header">
-              <img src=".." class="rounded me-2" alt="..." />
-              <strong class="me-auto">Bootstrap</strong>
-              <small>11 mins ago</small>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-              ></button>
+          <div class="app-header-actions-buttons">
+            <div class="btn-group">
+              <a
+                class="icon large"
+                data-placement="top"
+                data-popover-content="#a1"
+                data-toggle="popover"
+                data-trigger="focus"
+                href="#"
+                tabindex="0"
+              >
+                <i class="bi bi-bell-fill"></i>
+              </a>
+              <div class="hidden" id="a1" style="display: none">
+                <div class="popover-heading popover-header">Notifications</div>
+
+                <div class="popover-body">
+                  <ul id="notification">
+                    <li class="not">
+                      <i class="bi bi-share-fill"></i>notif 1
+                    </li>
+                    <li>
+                      notif 2
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
             </div>
-            <div class="toast-body">Hello, world! This is a toast message.</div>
+
+            {% block share%}{% endblock %}
           </div>
         </div>
+        {% endif %}
       </header>
       <div class="content">
         {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %} {% for category, message in messages %} {% if category ==
-        'error' %}
+        messages %} {% for category, message in messages %} {% if category
+        =='error' %}
         <div
           class="alert alert-danger alter-dismissable fade show flash"
           role="alert"
@@ -121,92 +123,92 @@
           <button type="button" class="close" data-dismiss="alert">
             <span aria-hidden="true">&times;</span>
           </button>
-          {% else %}
-          <div
-            class="alert alert-success alter-dismissable fade show flash"
-            role="alert"
-          >
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %}
-          {% endblock %}
         </div>
+        {% else %}
+        <div
+          class="alert alert-success alter-dismissable fade show flash"
+          role="alert"
+        >
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %} {% endfor %} {% endif %} {% endwith %} {% block content %}
+        {% endblock %}
       </div>
-      <script
-        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"
-      ></script>
-      <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"
-      ></script>
-      <script
-        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"
-      ></script>
-      <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"
-      ></script>
-      <div class="modal fade" id="modal1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Nouveau Projet</h5>
-              <button
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <form method="POST">
-              <input type="hidden" name="action" value="create_project" />
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="name">Project name</label>
-                  <input
-                    type="name"
-                    class="form-control"
-                    id="name"
-                    name="name"
-                    placeholder="Your project name"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="description">Description</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="description"
-                    name="description"
-                    placeholder="Describe your project"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="end_date">End of your project</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="end_date"
-                    name="end_date"
-                    placeholder=""
-                  />
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">
-                  Créer Projet
-                </button>
-              </div>
-            </form>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <div class="modal fade" id="modal1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nouveau Projet</h5>
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
+          <form method="POST">
+            <input type="hidden" name="action" value="create_project" />
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Project name</label>
+                <input
+                  type="name"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="Your project name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Describe your project"
+                />
+              </div>
+              <div class="form-group">
+                <label for="end_date">End of your project</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="end_date"
+                  name="end_date"
+                  placeholder=""
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">
+                Créer Projet
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

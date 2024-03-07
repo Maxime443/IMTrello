@@ -322,3 +322,26 @@ function remove_dev_from_task(user_id, task_id, project_id) {
     });
         
         });
+
+        const toastTrigger = document.getElementById('liveToastBtn')
+        const toastLiveExample = document.getElementById('liveToast')
+        
+        if (toastTrigger) {
+          const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+          toastTrigger.addEventListener('click', () => {
+            toastBootstrap.show()
+          })
+        }
+        $(function(){
+          $("[data-toggle=popover]").popover({
+              html : true,
+              content: function() {
+                var content = $(this).attr("data-popover-content");
+                return $(content).children(".popover-body").html();
+              },
+              title: function() {
+                var title = $(this).attr("data-popover-content");
+                return $(title).children(".popover-heading").html();
+              }
+          });
+      });
