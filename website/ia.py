@@ -75,3 +75,9 @@ repository = 'CACAO-2023'
 
 commit_messages = get_all_repository_commits(username, repository)
 print(commit_messages)
+
+
+
+#Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit
+def avancement_commitmessage(commit_messages):
+    
