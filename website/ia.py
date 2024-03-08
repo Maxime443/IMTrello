@@ -1,5 +1,7 @@
 from gpt4all import GPT4All
 import requests
+import pandas as pd
+import re
 
 def estim_tache(experiences,desc_tache):
     #experiences : liste des experiences des developpeurs du projet
@@ -40,7 +42,7 @@ def avancement_projet(taches_projet):
     for t in taches_projet:
         if t[2]=='completed':
             en_cours+=estim_tache(t[0],t[1])
-    return en_cours/temps_estime
+    return 100*en_cours/temps_estime
 
 
 
@@ -48,7 +50,7 @@ def avancement_projet(taches_projet):
 def get_all_repository_commits(proprietaire_repository, nom_repository):
     #proprietaire_repository : pseudo du proprietaire du repository
     #nom_repository : nom du repository où l'on souhaite obtenir les messages des commit
-    #IMPORTANT : on suppose que les messages des commit sont sous la forme "username; nom_tache, commit_message"
+    #IMPORTANT : on suppose que les messages des commit sont sous la forme "nom_tache; commit_message"
     #où username est le nom du développeur qui effectue le commit
 
 
@@ -60,15 +62,14 @@ def get_all_repository_commits(proprietaire_repository, nom_repository):
         
         if response.status_code == 200:
             commits = response.json()
-            commit_messages = [commit['commit']['message'] for commit in commits]
+            commit_messages = [(commit['commit']['message'], commit['commit']['author']['name']) for commit in commits]
             all_commit_messages.extend(commit_messages)
-            api_url = response.links.get('next', {}).get('url') #aller à toutes les pages de commit
+            api_url = response.links.get('next', {}).get('url')  # aller à toutes les pages de commit
         else:
             print(f"Échec de la requête ({response.status_code}): {response.text}")
             return None
 
     return all_commit_messages
-
 
 username = 'Kayus54'
 repository = 'CACAO-2023'
@@ -76,7 +77,7 @@ repository = 'CACAO-2023'
 commit_messages = get_all_repository_commits(username, repository)
 print(commit_messages)
 
-
+#####
 
 #Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit
 def avancement_commitmessage(commit_messages):
