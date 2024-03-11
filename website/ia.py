@@ -21,7 +21,9 @@ def estim_tache(experiences,desc_tache):
         last_response = model.current_chat_session[-1]['content']
     return last_response
 
-print(estim_tache(['confirmé'],'Réalisation d un algorithme Dijstra simple en Python qui doit permettre de trouver le plus court chemin dans un graphe à 20 noeuds'))
+#print(estim_tache(['confirmé'],'Réalisation d un algorithme Dijstra simple en Python qui doit permettre de trouver le plus court chemin dans un graphe à 20 noeuds'))
+
+
 
 def estim_projet(taches_projet):
     #taches_projet : listes des taches que le projet contient 
@@ -31,6 +33,8 @@ def estim_projet(taches_projet):
     for t in taches_projet:
         temps+=estim_tache(t[0],t[1])
     return temps
+
+
 
 
 def avancement_projet(taches_projet):
@@ -47,38 +51,57 @@ def avancement_projet(taches_projet):
 
 
 
-def get_all_repository_commits(proprietaire_repository, nom_repository):
+def get_commit_messages(username, nom_repository):
     #proprietaire_repository : pseudo du proprietaire du repository
     #nom_repository : nom du repository où l'on souhaite obtenir les messages des commit
     #IMPORTANT : on suppose que les messages des commit sont sous la forme "nom_tache; commit_message"
     #où username est le nom du développeur qui effectue le commit
 
 
-    api_url = f'https://api.github.com/repos/{proprietaire_repository}/{nom_repository}/commits'
-    all_commit_messages = []
+    api_url = f'https://api.github.com/repos/{username}/{nom_repository}/commits'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        commits = response.json()
+        commit_messages = [(commit['commit']['message'], commit['commit']['author']['name']) for commit in commits]
+        return commit_messages
+    else:
+        print(f"Échec de la requête ({response.status_code}): {response.text}")
+        return None
 
-    while api_url:
-        response = requests.get(api_url)
-        
-        if response.status_code == 200:
-            commits = response.json()
-            commit_messages = [(commit['commit']['message'], commit['commit']['author']['name']) for commit in commits]
-            all_commit_messages.extend(commit_messages)
-            api_url = response.links.get('next', {}).get('url')  # aller à toutes les pages de commit
-        else:
-            print(f"Échec de la requête ({response.status_code}): {response.text}")
-            return None
 
-    return all_commit_messages
 
-username = 'Kayus54'
-repository = 'CACAO-2023'
+def extract_infos(commit_messages):
+    #commit_message est une liste de couples ('message','auteur')
+    #message est de la forme nom_tache;description_tache
 
-commit_messages = get_all_repository_commits(username, repository)
-print(commit_messages)
+    liste_auteurs=[]
+    liste_nom_tache=[]
+    liste_desc_tache=[]
+    for message, auteur in commit_messages:
+        try:
+          nom_tache, desc_tache = message.split(";")
+        except ValueError:
+          print(f"Le message '{message}' n'est pas au format attendu (nom_tache;description_tache).")
+          continue
 
-#####
+        liste_auteurs.append(auteur)
+        liste_nom_tache.append(nom_tache)
+        liste_desc_tache.append(desc_tache)
+
+    df = pd.DataFrame({"Auteur": liste_auteurs, "Tache": liste_nom_tache, "Description": liste_desc_tache})
+
+    return df,liste_auteurs,liste_nom_tache,liste_desc_tache
+
+nom = "Maxime443"
+repo="IMTrello"
+messages=get_commit_messages(nom, repo)
+df,liste_auteurs,liste_nom_tache,liste_desc_tache=extract_infos(messages)
+print(liste_auteurs)
+print(liste_nom_tache)
+print(liste_desc_tache)
+#print(df)
 
 #Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit
 def avancement_commitmessage(commit_messages):
+    return None
     
