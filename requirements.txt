@@ -3,4 +3,10 @@ flask~=2.2.5
 werkzeug~=2.3.8
 sqlalchemy~=2.0.25
 flask-login~=0.6.3
+<<<<<<< HEAD
 gunicorn==20.1.0
+=======
+gpt4all
+requests
+pandas
+>>>>>>> d3648abb8d0c1f618bf097cbc38bbd9c08b7f9b2
