@@ -42,6 +42,7 @@ class Project(db.Model):
     end_date = db.Column(db.DateTime(timezone=True))
     admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sections=db.relationship('Section',backref='project')
+    progress = db.Column(db.Integer)
 
 
 class Section(db.Model):

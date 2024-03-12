@@ -22,7 +22,7 @@ def home():
                 flash('Project name is too short.', category='error')
             else:
                 flash('Project added', category='success')
-                new_project = Project(name="Project " + name, admin_id=current_user.id, description=description, end_date=end_date, sections=[])
+                new_project = Project(name="Project " + name, admin_id=current_user.id, description=description, end_date=end_date, sections=[], progress=10)
                 db.session.add(new_project)
                 current_user.projects.append(new_project)
                 db.session.commit()
