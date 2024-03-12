@@ -145,3 +145,16 @@ texte = "ajout des balises html pour les titres et les description"
 tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
 print(avancement_df(texte,tache_desc))
 print(df)    
+
+def create_dico(projet):
+    res={}
+    taches=[]
+    for section in projet.sections:
+        for tache in section.tasks:
+            taches.append(task)
+    for tache in taches:
+        exp=[]
+        for user in tache.users:
+            exp.append(user.experience)
+        res[tache]=[exp,tache.description,tache.status]
+    return res
