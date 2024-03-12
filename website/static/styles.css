@@ -734,13 +734,28 @@ master{
     border: none;
     border-radius: 10px;
     width: 100%;
-    padding: 0px;
+    height: 10px;
     display: flex;
     flex-direction: row;
+    position: relative;
+
+
+
+
+
+
+
 
 }
 .actual-bar{
-    background-color: rgb(115, 0, 255);
+    position: absolute; /* Set position to absolute for positioning */
+    left: 0; /* Position the actual-bar to the left */
+    top: 0; /* Align the actual-bar to the top */
+    height: 100%; /* Make the actual-bar fill the height of the progress-bar */
+
+
+
+    background: linear-gradient(90deg, rgba(141, 103, 242, 0.2), #855bff);
     border: none;
     border-radius: 10px;
 
