@@ -83,6 +83,7 @@ html{
     margin-top:2vw;
 }
 
+
 .carte{
     display: flex;
     justify-content: space-between;
@@ -208,6 +209,11 @@ html{
     position:relative;
     width:100%;
     height:48px;
+    background-color: #ad92f6; /* Jaune vif */
+    color: #ffffff; /* Texte blanc pour un contraste élevé */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .section_input{
@@ -651,6 +657,10 @@ master{
     font-size: 20px;
   }
   
+.app select{
+    color:#b3adad;
+}
+
   /* Styles for close button */
   .close-button {
     background: none;
@@ -675,6 +685,10 @@ master{
     display:flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-body{
+    color:white;
 }
 
 .notification-icon{
