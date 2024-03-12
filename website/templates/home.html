@@ -2,20 +2,32 @@
 
 {% block content %}
 <script src=".static.index.js"></script>
-<h1 align="center">
-    {% if user.type=='PROJECT_MANAGER' %}
-    You are a project manager
-    {% else %}
-    You are a developer
-    {% endif %}
-</h1>
+    <div class="hello-container">
+        <h1 align="left"  >
+            Hello,
+        </h1>
+        {% if user.type=='PROJECT_MANAGER' %}
+         <h1 align="left"  style="flex: 1; color: #8d67f2;">
+             Project Manager
+         </h1>
+        {% else %}
+            <h1 align="left" style="flex: 1; color: #8d67f2;">
+             Dev
+         </h1>
+        {% endif %}
+    </div>
+
+
 <div class="main-container container">
     {% if user.type=='PROJECT_MANAGER' %}
-    <div class="content-block shadow-lg p-3 mb-5 bg-black rounded">
+    <div class="content-block shadow-lg p-0 mb-5 bg-black rounded">
         <div class="content-text">
             <h2>IMTRELLO</h2>
             <p>Boost productivity, enhance collaboration, and conquer your goals with TaskMaster by your side.</p>
-            <button data-bs-toggle="modal" data-bs-target="#modal1" class="btn btn-outline-warning">New Project</button>
+            <button data-bs-toggle="modal" data-bs-target="#modal1" class="btn btn-outline-warning">
+                <span class="h5">
+                    New Project
+                </span></button>
         </div>
     </div>
     {% endif %}
@@ -32,16 +44,21 @@
     </div>
        <div class="progress-container">
 
-       <div class="progress-bar">
-           <div class="actual-bar" style="width: {{ project.progress }}%;">
+           <div class="progress-bar">
+               <div class="actual-bar" style="width: {{ project.progress }}%;">
+
+               </div>
 
            </div>
+          <div class="progress-text" style="left: {{ project.progress }}%;">
+              <span>{{ project.progress }}%</span>
+          </div>
+
+
 
        </div>
-      <div class="progress-text" style="left: {{ project.progress }}%;">
-          <span>{{ project.progress }}%</span>
-      </div>
-           </div>
+       <div class="project-description">{{project.description}}</div>
+
     <a href=" project/{{project.id}}" >
 
         <span class="icon-button">

@@ -22,7 +22,6 @@ def home():
             if len(name) < 1:
                 flash('Project name is too short.', category='error')
             else:
-                flash('Project added', category='success')
                 new_project = Project(name="Project " + name, admin_id=current_user.id, description=description, end_date=end_date, sections=[], progress=0,github=github)
                 db.session.add(new_project)
                 current_user.projects.append(new_project)
@@ -35,7 +34,6 @@ def home():
             if len(name) < 1:
                 flash('Project is too short.', category='error')
             else:
-                flash('Project renamed', category='success')
                 old_project = Project.query.get(project_id)
                 old_project.name = name
                 db.session.commit()
@@ -156,7 +154,6 @@ def project(project_id):
             db.session.commit()
             # Update the comments list with the new comment
             comments.append(new_comment)
-            flash('New Comment: ' + new_comment_content, category='success')
             return render_template('project.html', user=current_user, project=project, user_emails=user_emails,
                                    user_task_records=user_task_records, comments=comments,sections=sections)
 
@@ -222,7 +219,6 @@ def remove_dev_from_project():
 
 @views.route('/get-task-infos/<int:task_id>', methods=['GET'])
 def get_task(task_id):
-    flash('Task added', category='success')
     task = Task.query.get(task_id)
     if task:
         return jsonify({'id': task.id, 'name': task.name, 'description': task.description,

@@ -87,7 +87,7 @@ a {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--c-gray-600);
+		border-bottom: 0px solid var(--c-gray-600);
 	}
 }
 
@@ -179,10 +179,10 @@ a {
 .logo {
 	display: flex;
 	align-items: center;
-	padding-bottom: 1rem;
+
 	padding-top: 0rem;
 	margin:0;
-	border-bottom: 1px solid var(--c-gray-600);
+	border-bottom: 0px solid var(--c-gray-600);
 	@media (max-width: 1200px) {
 		border-bottom: 0;
 	}
@@ -246,7 +246,8 @@ a {
 	display: flex;
 	justify-content: space-evenly;
 	color: var(--c-text-tertiary);
-	border-bottom: 1px solid var(--c-gray-600);
+	border-bottom: 0px solid var(--c-gray-600);
+	font-size: 20px;
 
 	a {
 		padding-top: 1rem;
@@ -286,7 +287,7 @@ a {
 		font-size: 1.125rem;
 		padding-top: 1rem;
 		padding-bottom: 1rem;
-		border-bottom: 1px solid var(--c-gray-600);
+		border-bottom: 0px solid var(--c-gray-600);
 		font-weight: 300;
 	}
 
@@ -574,7 +575,7 @@ a {
 	align-items: center;
 	width: 100%;
 	padding-bottom: 0.75rem;
-	border-bottom: 1px solid var(--c-gray-600);
+	border-bottom: 0px solid var(--c-gray-600);
 	h2 {
 		font-size: 1.5rem;
 	}
@@ -638,7 +639,7 @@ a {
 		padding-top: 0.75rem;
 		padding-bottom: 0.75rem;
 		border-top: 1px solid var(--c-gray-600);
-		border-bottom: 1px solid var(--c-gray-600);
+		border-bottom: 0px solid var(--c-gray-600);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -816,7 +817,7 @@ a {
 		padding-top: 0.75rem;
 		padding-bottom: 0.75rem;
 		border-top: 1px solid var(--c-gray-600);
-		border-bottom: 1px solid var(--c-gray-600);
+		border-bottom: 0px solid var(--c-gray-600);
 		font-size: 0.875rem;
 		display: flex;
 		align-items: center;
