@@ -51,6 +51,8 @@ def avancement_projet(taches_projet):
 
 
 
+
+#renvoie les commit messages et les les auteurs des messages
 def get_commit_messages(username, nom_repository):
     #proprietaire_repository : pseudo du proprietaire du repository
     #nom_repository : nom du repository où l'on souhaite obtenir les messages des commit
@@ -70,6 +72,8 @@ def get_commit_messages(username, nom_repository):
 
 
 
+
+#renvoie une df contenant les auteurs des taches, le nom de la tache et la description de la tache
 def extract_infos(commit_messages):
     #commit_message est une liste de couples ('message','auteur')
     #message est de la forme nom_tache;description_tache
@@ -81,7 +85,7 @@ def extract_infos(commit_messages):
         try:
           nom_tache, desc_tache = message.split(";")
         except ValueError:
-          print(f"Le message '{message}' n'est pas au format attendu (nom_tache;description_tache).")
+          #print(f"Le message '{message}' n'est pas au format attendu (nom_tache;description_tache).")
           continue
 
         liste_auteurs.append(auteur)
@@ -90,18 +94,54 @@ def extract_infos(commit_messages):
 
     df = pd.DataFrame({"Auteur": liste_auteurs, "Tache": liste_nom_tache, "Description": liste_desc_tache})
 
-    return df,liste_auteurs,liste_nom_tache,liste_desc_tache
+    return df
 
 nom = "Maxime443"
 repo="IMTrello"
 messages=get_commit_messages(nom, repo)
-df,liste_auteurs,liste_nom_tache,liste_desc_tache=extract_infos(messages)
-print(liste_auteurs)
-print(liste_nom_tache)
-print(liste_desc_tache)
+df=extract_infos(messages)
+#print(liste_auteurs)
+#print(liste_nom_tache)
+#print(liste_desc_tache)
 #print(df)
 
-#Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit
-def avancement_commitmessage(commit_messages):
-    return None
+
+
+#renvoie une estimation de l'avancement à partir du texte du commit message et de la description de la tache
+def avancement_commitmessage(texte,tache_desc):
+
+    prompt1 = f"Je vais te présenter une tâche informatique ainsi qu'un message d'un developpeur qui a codé une ou plusieurs fonctions pour réaliser la tâche. Je veux que tu me dises de combien de pourcent cet ajout fait avancer le projet. Fait une estimation en prenant toutes les iniatives necessaires et renvoie moi uniquement un nombre. La tache est : {tache_desc}. le message de=u développeur est : {texte}"
+    prompt2 = 'Renvoie moi uniquement un nombre'
+    prompt3 = 'Je veux que ta réponse soit un nombre. Prend toutes les initiatives necessaires. Ne renvoie pas de texte.'
     
+    model = GPT4All(model_name='nous-hermes-llama2-13b.Q4_0.gguf')
+    with model.chat_session():
+        response1 = model.generate(prompt=prompt1, temp=0)
+        response2 = model.generate(prompt=prompt2, temp=0)
+        response3 = model.generate(prompt=prompt3, temp=0)
+        last_response = model.current_chat_session[-1]['content']
+    return last_response
+
+
+texte = "ajout des balises html pour les titres et les description"
+tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
+print(avancement_commitmessage(texte,tache_desc))
+
+
+#Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit et de la description générale de la tache 
+def avancement_df(commit_messages,desc_tache):
+    messages=get_commit_messages(nom, repo)
+    df=extract_infos(messages)
+    liste_avancements=[]
+    for index,row in df.iterrows():
+        texte=row['Description']
+        avancement=avancement_commitmessage(texte,desc_tache)
+        liste_avancements.append(avancement)
+    df['Resultat']=liste_avancements
+    return df
+
+
+texte = "ajout des balises html pour les titres et les description"
+tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
+print(avancement_df(texte,tache_desc))
+print(df)    
