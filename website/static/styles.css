@@ -742,23 +742,26 @@ master{
     padding: 10px;
 }
 
+.progress-container{
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
 .progress-bar{
     background-color: rgba(29, 29, 29, 0.55);
     color: white;
     border: none;
     border-radius: 10px;
-    width: 100%;
+    margin: 5px;
     height: 10px;
-    display: flex;
-    flex-direction: row;
+    width: 100%;
+
     position: relative;
-
-
-
-
-
-
-
 
 }
 .actual-bar{
@@ -766,11 +769,15 @@ master{
     left: 0; /* Position the actual-bar to the left */
     top: 0; /* Align the actual-bar to the top */
     height: 100%; /* Make the actual-bar fill the height of the progress-bar */
-
-
-
     background: linear-gradient(90deg, rgba(141, 103, 242, 0.2), #855bff);
     border: none;
     border-radius: 10px;
+}
 
+.progress-text{
+    position: absolute;
+    top: 15px;
+    color: #8d67f2;
+    font-size: 19px;
+    text-align: center;
 }
