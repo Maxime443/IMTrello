@@ -26,6 +26,7 @@ class User(UserMixin, db.Model):
     type = db.Column(db.String(), nullable=False)
     notifications = db.relationship('Notification', backref='user')
 
+
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -43,6 +44,7 @@ class Project(db.Model):
     admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     sections=db.relationship('Section',backref='project')
     progress = db.Column(db.Integer)
+    github = db.Column(db.String(100))
 
 
 class Section(db.Model):
