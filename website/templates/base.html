@@ -74,7 +74,13 @@
           <button class="user-profile">
             <span>{{user.first_name}}</span>
             <span>
-              <img src="https://assets.codepen.io/285131/almeria-avatar.jpeg" />
+                {%  if user.photo %}
+                    <div class="member-img" name="member" style="background-image: url('{{ url_for('static', filename='img/' + user.photo) }}'); background-size: cover;">
+                {% endif %}
+
+
+
+
             </span>
           </button>
           <div class="app-header-actions-buttons">
@@ -131,7 +137,7 @@
         </div>
         {% endif %}
       </header>
-      <div class="content">
+      <div class="content-left">
         {% with messages = get_flashed_messages(with_categories=true) %} {% if
         messages %} {% for category, message in messages %} {% if category
         =='error' %}
