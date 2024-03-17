@@ -143,23 +143,34 @@ def messagesdecommit_par_tache(df):
 
 
 #Déterminer l'avancement des taches du projet à l'aide des messages des commit et de la description générale de chaque tache du projet
-def avancement_df(listetaches):
-    #listetaches : liste des taches que contient le projet
+def avancement_tachedf(df):
+    #df : 2 colonnes : la 1ere contient le nom de la tache et la 2eme une liste des messages de commit associés à la tache
 
     messages=get_commit_messages(nom, repo)
     df=extract_infos(messages)
+    dfpartache = messagesdecommit_par_tache(df)
     liste_avancements=[]
     for index,row in df.iterrows():
-        texte=row['Description']
-        avancement=avancement_commitmessage(texte,desc_tache)
+        listetextes=row['Description']
+        avancement=avancement_commitmessage(listetextes,desc_tache)
         liste_avancements.append(avancement)
-    df['Resultat']=liste_avancements
-    return df
+    dfpartache['Resultat']=liste_avancements
+    return dfpartache
 
 
-texte = "ajout des balises html pour les titres et les description"
-tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
-#print(avancement_df(texte,tache_desc))    
+
+
+#A partir du dictionnaire renvoie l'avancement du projet
+def avancementprojetfinal(res):
+
+
+
+
+
+#Renvoie pour chaque sa proportion en temps dans le projet
+def proportiontaches_dansprojet():
+
+
 
 
 
@@ -169,7 +180,7 @@ def create_dico(projet):
     taches=[]
     for section in projet.sections:
         for tache in section.tasks:
-            taches.append(task)
+            taches.append(tache)
     for tache in taches:
         exp=[]
         for user in tache.users:
