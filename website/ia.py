@@ -108,28 +108,44 @@ df=extract_infos(messages)
 
 
 #renvoie une estimation de l'avancement à partir du texte du commit message et de la description de la tache
-def avancement_commitmessage(texte,tache_desc):
+def avancement_commitmessage(liste_textes,tache_desc):
+    #liste_textes : liste composée des messages de commit relatifs à la tache
 
-    prompt1 = f"Je vais te présenter une tâche informatique ainsi qu'un message d'un developpeur qui a codé une ou plusieurs fonctions pour réaliser la tâche. Je veux que tu me dises de combien de pourcent cet ajout fait avancer le projet. Fait une estimation en prenant toutes les iniatives necessaires et renvoie moi uniquement un nombre. La tache est : {tache_desc}. le message de=u développeur est : {texte}"
+    n=len(liste_textes)
+    prompt1 = f"Je vais te presenter une tache informatique ainsi qu'un message de {n} developpeur qui ont code une ou plusieurs fonctions pour realiser la tache. Je veux que tu me dises de combien de pourcent ces ajouts fait avancer le projet. Fait une estimation en prenant toutes les iniatives necessaires et renvoie moi uniquement un nombre. La tache est : {tache_desc}. Les message des developpeurs sont : {[texte for texte in liste_textes]}"
     prompt2 = 'Renvoie moi uniquement un nombre'
     prompt3 = 'Je veux que ta réponse soit un nombre. Prend toutes les initiatives necessaires. Ne renvoie pas de texte.'
+    prompt4= 'Renvoie uniquement le nombre sans aucun texte et aucun autre caractère ta réponse doit etre un nombre entier'
     
     model = GPT4All(model_name='nous-hermes-llama2-13b.Q4_0.gguf')
     with model.chat_session():
         response1 = model.generate(prompt=prompt1, temp=0)
         response2 = model.generate(prompt=prompt2, temp=0)
         response3 = model.generate(prompt=prompt3, temp=0)
+        response4= model.generate(prompt=prompt4, temp=0)
         last_response = model.current_chat_session[-1]['content']
     return last_response
 
 
-texte = "ajout des balises html pour les titres et les description"
+listetextes = ["ajout des balises html pour les titres","ajout des balises html pour la description","ajout des balises html pour la mise en place des images"]
 tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
-print(avancement_commitmessage(texte,tache_desc))
+#print(avancement_commitmessage(listetextes,tache_desc))
 
 
-#Déterminer l'avancement d'une tâche du projet à l'aide des messages des commit et de la description générale de la tache 
-def avancement_df(commit_messages,desc_tache):
+
+#Renvoie une df à 2 colonnes : la 1ere contient le nom de la tache et la 2eme une liste des messages de commit associés à la tache
+def messagesdecommit_par_tache(df):
+    #df : dataframe contenant les auteurs des taches, le nom de la tache et la description de la tache
+    descriptions_par_tache = df.groupby('Tache')['Description'].apply(list).reset_index()
+    return descriptions_par_tache
+
+
+
+
+#Déterminer l'avancement des taches du projet à l'aide des messages des commit et de la description générale de chaque tache du projet
+def avancement_df(listetaches):
+    #listetaches : liste des taches que contient le projet
+
     messages=get_commit_messages(nom, repo)
     df=extract_infos(messages)
     liste_avancements=[]
@@ -143,5 +159,22 @@ def avancement_df(commit_messages,desc_tache):
 
 texte = "ajout des balises html pour les titres et les description"
 tache_desc= "réaliser une page simple d'une site ou il y a un titre, une image et la decription de cette image"
-print(avancement_df(texte,tache_desc))
-print(df)    
+#print(avancement_df(texte,tache_desc))    
+
+
+
+
+def create_dico(projet):
+    res={}
+    taches=[]
+    for section in projet.sections:
+        for tache in section.tasks:
+            taches.append(task)
+    for tache in taches:
+        exp=[]
+        for user in tache.users:
+            exp.append(user.experience)
+        res[tache]=[exp,tache.description,tache.status]
+    return res
+
+#print(res)
