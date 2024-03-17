@@ -25,32 +25,6 @@ def estim_tache(experiences,desc_tache):
 
 
 
-def estim_projet(taches_projet):
-    #taches_projet : listes des taches que le projet contient 
-    #un élément de la liste est sous la forme [experiences,desc_tache,statut]
-
-    temps=0
-    for t in taches_projet:
-        temps+=estim_tache(t[0],t[1])
-    return temps
-
-
-
-
-def avancement_projet(taches_projet):
-    #taches_projet : listes des taches que le projet contient 
-    #un élément de la liste est sous la forme [experiences,desc_tache,statut]
-
-    temps_estime=estim_projet(taches_projet)
-    en_cours=0
-    for t in taches_projet:
-        if t[2]=='completed':
-            en_cours+=estim_tache(t[0],t[1])
-    return 100*en_cours/temps_estime
-
-
-
-
 
 #renvoie les commit messages et les les auteurs des messages
 def get_commit_messages(username, nom_repository):
@@ -161,14 +135,41 @@ def avancement_tachedf(df):
 
 
 #A partir du dictionnaire renvoie l'avancement du projet
-def avancementprojetfinal(res):
+def avancementprojetfinal(res,username,repo):
 
+    temps_total_projet=0
+    listetempstache=[]
+    for tache in res:
+        listeinfos=res[tache]
+        experiences=listeinfos[0]
+        descriptiontache=listeinfos[1]
+        statutstaches=listeinfos[2]
+        estimationtache= estim_tache(experiences,descripiontache)
+        listetempstache.append(estimationtache)
+        temps_total_projet+=estimationtache
 
+    listepoidstache=[]
+    for e in listetempstache:
+        proportion=e/temps_total_projet
+        listepoidstache.append(proportion)
+    
 
+    #Partie avancement projet
+    avancement_projet=0
+    for i in range len(statutstaches):
+        if statutstaches[i] == 'completed':
+            avancement_projet+=listepoidstache*100
+        else :
+            commit_messages= get_commit_messages(username, repo)
+            dfinfos=extract_infos(commit_messages)
+            messagesdecommit_par_tache=messagesdecommit_par_tache(dfinfos)
+            avancement_tachedf=avancement_tachedf(messagesdecommit_par_tache)
+            listeavancements=avancement_tachedf['Resultat'].tolist()
+        avancement_projet+=sum(listeavancements)
 
+    return avancement_projet
+            
 
-#Renvoie pour chaque sa proportion en temps dans le projet
-def proportiontaches_dansprojet():
 
 
 
