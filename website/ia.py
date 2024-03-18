@@ -188,12 +188,12 @@ def create_dico(projet):
     taches=[]
     for section in projet.sections:
         for tache in section.tasks:
-            taches.append(tache)
+            taches.append(task)
     for tache in taches:
         exp=[]
         for user in tache.users:
             exp.append(user.experience)
-        res[tache]=[exp,tache.description,tache.status]
+        res[tache]=[exp,tache.description,tache.status,tache.name]
     return res
 
 #print(res)
