@@ -138,8 +138,10 @@ def avancement_tachedf(df):
 def avancementprojetfinal(res,username,repo):
 
     temps_total_projet=0
+    liste_nom_taches=res
     listetempstache=[]
     for tache in res:
+        liste_nom_taches.append(tache)   #est-ce que tache est le nom de la tache ?
         listeinfos=res[tache]
         experiences=listeinfos[0]
         descriptiontache=listeinfos[1]
@@ -152,10 +154,12 @@ def avancementprojetfinal(res,username,repo):
     for e in listetempstache:
         proportion=e/temps_total_projet
         listepoidstache.append(proportion)
-    
+        listecouples1=()
 
     #Partie avancement projet
     avancement_projet=0
+    listecouples2=[]
+
     for i in range len(statutstaches):
         if statutstaches[i] == 'completed':
             avancement_projet+=listepoidstache*100
@@ -164,14 +168,17 @@ def avancementprojetfinal(res,username,repo):
             dfinfos=extract_infos(commit_messages)
             messagesdecommit_par_tache=messagesdecommit_par_tache(dfinfos)
             avancement_tachedf=avancement_tachedf(messagesdecommit_par_tache)
-            listeavancements=avancement_tachedf['Resultat'].tolist()
+            for index, row in df.iterrows():
+                nomtache = row['Tache']
+                avancement = row['Resultat']
+                couple = (nomtache, avancement)
+                listecouples2.append(couple)
+
+            avancementrelatif=[listeavancements[i]*listepoids[i]]
         avancement_projet+=sum(listeavancements)
 
     return avancement_projet
             
-
-
-
 
 
 
