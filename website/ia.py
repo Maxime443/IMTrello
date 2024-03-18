@@ -137,45 +137,59 @@ def avancement_tachedf(df):
 #A partir du dictionnaire renvoie l'avancement du projet
 def avancementprojetfinal(res,username,repo):
 
-    temps_total_projet=0
-    liste_nom_taches=res
-    listetempstache=[]
+
+    #Partie estimation des temps des taches
+
+    temps_total_projet=0    #int : temps estimé total du projet
+    listetempstache=[]    #list de int: chaque élément est le temps estimé d'une tache
+    listestatutstaches=[]   #list de string : completed, uncompleted
+    liste_nom_taches=[]    #list de string : les elements sont les noms des taches
+    dict_proportions={}    #dict : poids (en terme de temps) des taches dans le projet
+
     for tache in res:
-        liste_nom_taches.append(tache)   #est-ce que tache est le nom de la tache ?
         listeinfos=res[tache]
-        experiences=listeinfos[0]
-        descriptiontache=listeinfos[1]
-        statutstaches=listeinfos[2]
-        estimationtache= estim_tache(experiences,descripiontache)
+        experiences=listeinfos[0]    #list de string : liste des expériences des développeurs de la tache
+        descriptiontache=listeinfos[1]   #string : description de la tache
+        statutstaches=listeinfos[2]     #string : completed, uncompleted
+        listestatutstaches.append(statutstaches)
+        nomdelatache=listeinfos[3]      #string : nom de la tache
+        liste_nom_taches.append(nomdelatache) 
+        estimationtache= estim_tache(experiences,descriptiontache)   #int : correspond au temps estimé de la tache
         listetempstache.append(estimationtache)
         temps_total_projet+=estimationtache
 
-    listepoidstache=[]
+    listepoidstache=[]    #list de float : les elements sont les poids (en terme de temps) des taches dans le projet
     for e in listetempstache:
-        proportion=e/temps_total_projet
+        proportion=e/temps_total_projet   #float : poids de la tache
         listepoidstache.append(proportion)
-        listecouples1=()
+    
+    for i in range(len(proportion)):
+        dict_proportions[liste_nom_taches[i]]=proportion[i]
+
+
 
     #Partie avancement projet
-    avancement_projet=0
-    listecouples2=[]
 
-    for i in range len(statutstaches):
-        if statutstaches[i] == 'completed':
+    avancement_projet=0
+    listecouples2=[]    #list de couples (string,int) : couple de la forme (nom de la tache, avancement de la tache en cours)
+
+    for i in range len(listestatutstaches):
+        if listestatutstaches[i] == 'completed':
             avancement_projet+=listepoidstache*100
         else :
-            commit_messages= get_commit_messages(username, repo)
-            dfinfos=extract_infos(commit_messages)
-            messagesdecommit_par_tache=messagesdecommit_par_tache(dfinfos)
-            avancement_tachedf=avancement_tachedf(messagesdecommit_par_tache)
+            commit_messages= get_commit_messages(username, repo)   #liste de couples ('message','auteur') 
+            dfinfos=extract_infos(commit_messages)    #dataframe a 3 colonnes : auteurs des taches, le nom de la tache et la description de la tache
+            messagesdecommit_par_tache=messagesdecommit_par_tache(dfinfos)     #df à 2 colonnes : la 1ere contient le nom de la tache et la 2eme une liste des messages de commit associés à la tache
+            avancement_tachedf=avancement_tachedf(messagesdecommit_par_tache)   ##df : 3 colonnes : la 1ere contient le nom de la tache, la 2eme une liste des messages de commit associés à la tache, la 3eme les nombres correspondant à l'avancement
             for index, row in df.iterrows():
                 nomtache = row['Tache']
                 avancement = row['Resultat']
-                couple = (nomtache, avancement)
-                listecouples2.append(couple)
-
-            avancementrelatif=[listeavancements[i]*listepoids[i]]
-        avancement_projet+=sum(listeavancements)
+                couple2 = (nomtache, avancement)
+                listecouples2.append(couple2)
+    
+            for i in range(len(couple2)):
+                nomtache,avancementache=couple2[i]
+                avancement_projet+=avancementache*dict_proportions[nomtache]
 
     return avancement_projet
             
