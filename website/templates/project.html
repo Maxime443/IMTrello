@@ -3,8 +3,12 @@
 <button class="icon large" data-bs-toggle="modal" data-bs-target="#modal_share">
   <i class="bi bi-share-fill"></i>
 </button>
-{% endif %} {% endblock %} {% block content %} {% if
+{% endif %} {% endblock %} {% block content %}
+    <div class="container-dev">{% if
 user.type=='PROJECT_MANAGER' %}
+
+
+
 <div display="flex">
   <h1 align="center" draggable="true">{{ project.name }}</h1>
 </div>
@@ -758,4 +762,9 @@ user.type=='PROJECT_MANAGER' %}
   </div>
   {% endfor %}
 </div>
-{% endif %} {% endblock %}
+
+
+{% endif %}
+
+</div>
+{% endblock %}

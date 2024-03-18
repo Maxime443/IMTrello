@@ -1,9 +1,13 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+import os
+
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from werkzeug.utils import secure_filename
+
+import app
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db  ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
-
 
 auth = Blueprint('auth', __name__)
 
@@ -34,8 +38,12 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
+
+
+
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
@@ -45,6 +53,7 @@ def sign_up():
 
         user = User.query.filter_by(email=email).first()
         user_experience = request.form.get('user_experience')
+
         if user:
             flash('Email already exists.', category='error')
         elif len(email) < 4:
@@ -58,10 +67,12 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'), type=type,experience=user_experience)
+                password1, method='sha256'), type=type, experience=user_experience)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
             return redirect(url_for('views.home'))
+
+
 
     return render_template("sign_up.html", user=current_user)

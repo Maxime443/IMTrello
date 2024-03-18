@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     experience=db.Column(db.String(), nullable=False)
     type = db.Column(db.String(), nullable=False)
     notifications = db.relationship('Notification', backref='user')
+    photo = db.Column(db.String(10000))
 
 
 class Notification(db.Model):

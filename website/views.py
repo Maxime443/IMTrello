@@ -8,8 +8,9 @@ import json
 
 views = Blueprint('views', __name__)
 
-@views.route('/', methods=['GET', 'POST'])
+
 @login_required
+@views.route('/', methods=['POST','GET'])
 def home():
     if request.method == 'POST':
         # checking if this is the project creation form

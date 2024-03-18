@@ -80,7 +80,9 @@ html{
 
 
 .div-sec{
+    width: 100%;
     margin-top:2vw;
+    display: grid;
 }
 
 
@@ -202,6 +204,14 @@ html{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.content-left{
+    width:100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .fas{
@@ -645,25 +655,25 @@ master{
     color: white;
     margin-bottom: 10px;
   }
-  
+
   /* Styles for notification message and icon */
   .notification-message {
     display: flex;
     align-items: center;
 
   }
-  
+
   .notification-message .icon {
     margin-right: 10px;
     font-size: 1.5rem;
   }
-  
+
   /* Styles for message text */
   .message-text {
     flex-grow: 1;
     font-size: 20px;
   }
-  
+
 .app select{
     color:#b3adad;
 }
@@ -762,6 +772,28 @@ master{
     text-align: center;
 
 
+}
+
+.container-login{
+    margin: 40px;
+    width: 60%;
+    align-content: center;
+    text-align: left;
+}
+
+.container-mid{
+    width: 100%;
+      display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+}
+
+.container-dev{
+    width: 100%;
+      display: flex;
+    flex-direction: column;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
 }
 
 .btn-outline-warning{
