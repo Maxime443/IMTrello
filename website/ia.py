@@ -173,7 +173,7 @@ def avancementprojetfinal(res,username,repo):
     avancement_projet=0
     listecouples2=[]    #list de couples (string,int) : couple de la forme (nom de la tache, avancement de la tache en cours)
 
-    for i in range len(listestatutstaches):
+    for i in range(len(listestatutstaches)):
         if listestatutstaches[i] == 'completed':
             avancement_projet+=listepoidstache*100
         else :
@@ -202,7 +202,7 @@ def create_dico(projet):
     taches=[]
     for section in projet.sections:
         for tache in section.tasks:
-            taches.append(task)
+            taches.append(tache)
     for tache in taches:
         exp=[]
         for user in tache.users:
@@ -210,4 +210,3 @@ def create_dico(projet):
         res[tache]=[exp,tache.description,tache.status,tache.name]
     return res
 
-#print(res)
