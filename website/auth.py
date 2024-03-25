@@ -4,7 +4,11 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from werkzeug.utils import secure_filename
 
 
+<<<<<<< HEAD
 from .models import User
+=======
+from website.models import User
+>>>>>>> 6759f77519b8ff3db34e5bb596b688d5c5fd91c9
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db  ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user

@@ -71,7 +71,7 @@
         </div>
         {% if user.is_authenticated %}
         <div class="app-header-actions">
-          <button class="user-profile">
+          <a class="user-profile" href="/user/{{user.id}}">
             <span>{{user.first_name}}</span>
             <span>
                 {%  if user.photo %}
