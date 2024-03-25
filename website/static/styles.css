@@ -901,4 +901,11 @@ master{
     height:230px;
 }
 
-
+.search-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: row;
+}
