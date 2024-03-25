@@ -189,17 +189,15 @@ def avancementprojetfinal(res,username,repo):
             varmessagesdecommit_par_tache=messagesdecommit_par_tache(dfinfos)     #df à 2 colonnes : la 1ere contient le nom de la tache et la 2eme une liste des messages de commit associés à la tache
             dffiltree= varmessagesdecommit_par_tache[varmessagesdecommit_par_tache['Tache'].isin(dict_proportions.keys())]  #on ne garde que les lignes du dictionnaire proportion 
             varavancement_tachedf=avancement_tachedf(dffiltree,res)   ##df : 3 colonnes : la 1ere contient le nom de la tache, la 2eme une liste des messages de commit associés à la tache, la 3eme les nombres correspondant à l'avancement
+            
             for index, row in varavancement_tachedf.iterrows():
                 nomtache = row['Tache']
                 avancement = row['Resultat']
-                couple2 = (nomtache, avancement)
-                listecouples2.append(couple2)
+                augmentationavancement = avancement * dict_proportions[nomtache]
+                avancement_projet += augmentationavancement
+                
     
-            for nomtache, avancementache in listecouples2:
-                avancement_projet += avancementache * dict_proportions[nomtache]
-
-
-    return avancement_projet
+    return avancement_projet/len(listestatutstaches)
             
 
 
@@ -220,15 +218,15 @@ def create_dico(projet):
 
 
 
-res={"Création de la structure HTML de base": [["confirmé","confirmé"],"Cette tâche implique la mise en place de la structure HTML de la page internet, y compris les balises <html>, <head> et <body>, ainsi que l ajout des éléments de base tels que le titre, les en-têtes et les pieds de page.","uncompleted","Création de la structure HTML de base"],
-    "Stylisation CSS de la page": [["confirmé","intermédiaire"],"Cette tâche consiste à coder les feuilles de style CSS pour styliser la page internet, y compris la mise en forme des couleurs, polices, tailles de texte, marges et espacements.","uncompleted","Stylisation CSS de la page"],
+#res={"Création de la structure HTML de base": [["confirmé","confirmé"],"Cette tâche implique la mise en place de la structure HTML de la page internet, y compris les balises <html>, <head> et <body>, ainsi que l ajout des éléments de base tels que le titre, les en-têtes et les pieds de page.","uncompleted","Création de la structure HTML de base"],
+    #"Stylisation CSS de la page": [["confirmé","intermédiaire"],"Cette tâche consiste à coder les feuilles de style CSS pour styliser la page internet, y compris la mise en forme des couleurs, polices, tailles de texte, marges et espacements.","uncompleted","Stylisation CSS de la page"],
     #"Intégration de fonctionnalités JavaScript": [["intermédiaire","débutant"],"Cette tâche implique l ajout de fonctionnalités interactives à la page internet en utilisant JavaScript, telles que des animations, des boutons cliquables, des formulaires interactifs, etc.","uncompleted"],
     #"Optimisation de la compatibilité multi-navigateurs":[["intermédiaire","confirmé"],"Cette tâche vise à tester et à ajuster la page internet pour assurer son bon fonctionnement sur différents navigateurs web, en résolvant les problèmes de compatibilité CSS et JavaScript.","uncompleted"],
     #"Ajout de contenu dynamique":[["confirmé","intermédiaire"],"Cette tâche consiste à intégrer du contenu dynamique à la page internet, tel que des articles de blog, des galeries d images, des vidéos, en utilisant des technologies comme AJAX pour charger le contenu de manière asynchrone.","uncompleted"]
-    }
+    #}
 
 
-nom="KilianLavenan"
-repo="Connect4"
+#nom="KilianLavenan"
+#repo="Connect4"
 
-print(avancementprojetfinal(res,nom,repo))
+#print(avancementprojetfinal(res,nom,repo))
