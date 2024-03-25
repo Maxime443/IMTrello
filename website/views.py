@@ -66,7 +66,7 @@ def project(project_id):
         action = request.form.get('action')
         if action == 'add_section':
             name = request.form.get('section_name')
-            new_section = Section(name="Section " + name, project_id=project_id, tasks=[])
+            new_section = Section(name=name, project_id=project_id, tasks=[])
             db.session.add(new_section)
             project.sections.append(new_section)
             db.session.commit()
@@ -88,7 +88,7 @@ def project(project_id):
             name = request.form.get('task_name')
             section_id = request.form.get('task_section_id')
             description = request.form.get('task_description')
-            new_task = Task(name="Task " + name, section_id=section_id, description=description, status='uncompleted', priority='medium')
+            new_task = Task(name= name, section_id=section_id, description=description, status='uncompleted', priority='medium')
             admin.tasks.append(new_task)
             new_chat = Chat(task_id=new_task.id)
             new_task.chat_id = new_chat.id

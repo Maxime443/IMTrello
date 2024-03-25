@@ -607,7 +607,7 @@ user.type=='PROJECT_MANAGER' %}
               >{{ task.name }}</a
             >
           </h6>
-          <small class="fw-medium fst-italic opacity-50">
+          <small class="fw-medium fst-italic opacity-50 section-name">
             {% for section in project.sections %} {% if task.section_id ==
             section.id %} {{ section.name }} {% endif %} {% endfor %}
           </small>

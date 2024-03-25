@@ -292,9 +292,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusValue = status.value;
     tasks.forEach(function (task) {
       const taskName = task.querySelector('.card-title a').textContent.toLowerCase();
+      const sectionName = task.querySelector('.section-name').textContent.toLowerCase();
       const taskPriority = task.querySelector('.priority span').textContent.toLowerCase();
       const taskStatus = task.querySelector('.status span').textContent;
-      if (taskName.includes(searchTerm) && taskPriority.includes(priorityValue) && taskStatus.includes(statusValue)) {
+      if ((taskName.includes(searchTerm)||sectionName.includes(searchTerm)) && taskPriority.includes(priorityValue) && taskStatus.includes(statusValue)) {
         task.style.display = 'block';
       } else {
         task.style.display = 'none';
