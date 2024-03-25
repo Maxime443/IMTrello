@@ -282,23 +282,28 @@ function updateTaskPriority (task_id, value, projectId) {
 
 document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.getElementById('search-input');
+  const priority = document.getElementById('priority');
+  const status = document.getElementById('status');
+  console.log(status.value.toLowerCase());
   const tasks = document.querySelectorAll('.task-card');
-  searchInput.addEventListener('input', function () {
+  function handleChange() {
     const searchTerm = searchInput.value.trim().toLowerCase();
-
+    const priorityValue = priority.value.toLowerCase();
+    const statusValue = status.value;
     tasks.forEach(function (task) {
       const taskName = task.querySelector('.card-title a').textContent.toLowerCase();
       const taskPriority = task.querySelector('.priority span').textContent.toLowerCase();
-      const taskStatus = task.querySelector('.status span').textContent.toLowerCase();
-      console.log(taskStatus);
-
-      if (taskName.includes(searchTerm) || taskPriority === searchTerm || taskStatus.includes(searchTerm)) {
+      const taskStatus = task.querySelector('.status span').textContent;
+      if (taskName.includes(searchTerm) && taskPriority.includes(priorityValue) && taskStatus.includes(statusValue)) {
         task.style.display = 'block';
       } else {
         task.style.display = 'none';
       }
     });
-  });
+  };
+  searchInput.addEventListener('input', handleChange);
+  priority.addEventListener('change', handleChange);
+  status.addEventListener('change', handleChange);
 });
 
 

@@ -287,3 +287,18 @@ def delete_all_notifications():
     print(notifications)
     db.session.commit()
     return jsonify({})
+
+@views.route("/user/<int:user_id>", methods=["GET", "POST"])
+def show_profile(user_id):
+    user=User.query.get(user_id)
+    if request.method=='POST':
+        user.first_name=request.form.get("firstName")
+        user.email=request.form.get("email")
+        if (request.form.get("user_experience") != ""):
+            user.experience=request.form.get("user_experience")
+        if (request.form.get("user_type") != ""):
+            user.type=request.form.get("user_type")
+        db.session.add(user)
+        db.session.commit()
+
+    return render_template("user.html",user=user, userId=user.id, name=user.first_name, email=user.email, type=user.type, experience=user.experience)

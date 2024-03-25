@@ -750,6 +750,10 @@ master{
     border: none;
 }
 
+.btn-primary:hover{
+    background-color: #a61f99
+}
+
 .js-example-basic-multiple{
     background-color: rgba(29, 29, 29, 0.55);
     color: white;
@@ -866,4 +870,42 @@ master{
     margin-top: 25px;
     margin-bottom: 25px;
     color: #8d67f2;
+}
+
+.user-type-option {
+    display: inline-block;
+    width: 45%; /* Adjust as needed */
+    margin-bottom: 20px;
+}
+
+.user-type-option input[type="radio"] {
+    display: none;
+}
+
+.user-type-option label {
+    display: block;
+    background-color: #f0f0f06a;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    height:200px;
+}
+
+.user-type-option label h4 {
+    margin-top: 0;
+}
+
+.user-type-option input[type="radio"]:checked + label {
+    background-color: #8d67f2;
+    color: white;
+    height:230px;
+}
+
+.search-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: row;
 }

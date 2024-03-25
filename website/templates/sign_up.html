@@ -44,14 +44,25 @@ content %}
               placeholder="Confirm password "
             />
           </div>
-          <div class="form-group">
-            <label for="user_type">What kind of user are you?</label>
-            <select id="user_type" name="user_type" class="form-control-special">
-              <option value="">Select current role</option>
-              <option value="PROJECT_MANAGER">Project Manager</option>
-              <option value="DEVELOPER">Developer</option>
-            </select>
-          </div>
+          <label for="user_type">What kind of user are you?</label>
+          <div style="display:flex; flex-direction:row;justify-content:space-between">
+            <div class="user-type-option" id="project_manager_option">
+                <input type="radio" id="project_manager" name="user_type" value="PROJECT_MANAGER">
+                <label for="project_manager">
+                    <h4>Project Manager</h4>
+                    <p>Project Managers are responsible for planning, organizing, and overseeing projects from conception to completion. They ensure that projects are completed on time, within budget, and meet the requirements.</p>
+                </label>
+            </div>
+            <div class="user-type-option" id="developer_option">
+                <input type="radio" id="developer" name="user_type" value="DEVELOPER">
+                <label for="developer">
+                    <h4>Developer</h4>
+                    <p>Developers are responsible for designing, coding, and testing software applications. They work closely with project managers and other team members to develop high-quality software solutions.</p>
+                </label>
+            </div>
+        </div>
+        
+        
           <div class="form-group">
             <label for="user_experience">What is your experience?</label>
             <select id="user_experience" name="user_experience" class="form-control-special">
