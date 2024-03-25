@@ -156,5 +156,5 @@ def create_dico(projet):
         exp=[]
         for user in tache.users:
             exp.append(user.experience)
-        res[tache]=[exp,tache.description,tache.status]
+        res[tache]=[exp,tache.description,tache.status,tache.name]
     return res
